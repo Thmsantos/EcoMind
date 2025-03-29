@@ -6,12 +6,14 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --loader ts-node/esm app.ts"
+    "start": "npm run dev",
+    "dev": "node --loader ts-node/esm app.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ecomind": "file:",
     "express": "^4.21.2",
     "mongodb": "^6.15.0"
   },

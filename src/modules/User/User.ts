@@ -11,7 +11,7 @@ class User {
     private calculos: CalculoInterface[];
 
     constructor( 
-        id: ObjectId, 
+        id: ObjectId | undefined, 
         usuario: string,
         nome: string,
         email: string,
@@ -85,3 +85,5 @@ class User {
         this.calculos = calculos;
     }
 }
+
+export default User;

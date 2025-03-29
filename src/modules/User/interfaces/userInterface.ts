@@ -3,7 +3,7 @@ import { CalculoInterface } from "../../Calculo/interfaces/calculoInterface"
 
 export interface UserInterface{
     id: ObjectId
-    usuário: string
+    usuario: string
     nome: string
     email: string
     senha: string
