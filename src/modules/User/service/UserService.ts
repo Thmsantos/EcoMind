@@ -11,11 +11,6 @@ class UserService {
         this.userRepository = new UserRepository();
     }
 
-    public async helloWorld(req: Request, res: Response): Promise<void> {
-        const result = await this.userRepository.helloWorld("Hello World from Repository");
-        res.send(result);
-    }
-
     public async createUser(req: Request, res: Response): Promise<void> {
         try {
             const { usuario, nome, email, senha, status, calculos } = req.body;
