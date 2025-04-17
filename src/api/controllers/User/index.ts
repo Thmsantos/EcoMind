@@ -4,6 +4,9 @@ import UserService from ".././../../modules/User/service/UserService.js"
 const userRoutes = Router();
 const userService = new UserService();
 
-userRoutes.get("/helloWorld", (req, res) => userService.helloWorld(req, res));
+userRoutes.get("/search", (req, res) => userService.searchUser(req, res));
 userRoutes.post("/create", (req, res) => userService.createUser(req, res));
+userRoutes.put("/update", (req, res) => userService.updateUser(req, res));
+userRoutes.delete("/delete", (req, res) => userService.deleteUser(req, res));
+
 export default userRoutes;
