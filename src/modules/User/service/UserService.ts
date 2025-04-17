@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import UserRepository from "../repository/UserRepository.js";
 import { UserInterface } from "../interfaces/userInterface.js";
 import User from "../User.js";
+import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 
 class UserService {
@@ -33,13 +34,14 @@ class UserService {
   public async createUser(req: Request, res: Response): Promise<void> {
     try {
       const { usuario, nome, email, senha, status, calculos } = req.body;
+      const criptSenha = await bcrypt.hash(senha, 10);
 
       const user = new User(
         new ObjectId(),
         usuario,
         nome,
         email,
-        senha,
+        criptSenha,
         status,
         calculos
       );

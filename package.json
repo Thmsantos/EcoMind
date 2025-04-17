@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "ecomind": "file:",
     "express": "^4.21.2",
     "mongodb": "^6.15.0"
