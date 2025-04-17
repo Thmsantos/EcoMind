@@ -16,6 +16,7 @@
     "bcrypt": "^5.1.1",
     "ecomind": "file:",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.15.0"
   },
   "devDependencies": {
