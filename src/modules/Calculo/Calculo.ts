@@ -1,18 +1,18 @@
 import { ObjectId } from 'mongodb';
-import { TransporteInterface } from './interfaces/transporteInterface';
+import { TransporteInterface } from './interfaces/transporteInterface.js';
 
-class Calculo{
-    id: ObjectId;
-    idUser: ObjectId;
-    mes: string;
-    consumoEnergia: string;
-    consumoGas: string;
-    consumoTransporte: TransporteInterface;
-    consumoCarbono: string;
-    balanco: string;
+class Calculo {
+    private id: ObjectId;
+    private idUser: ObjectId; 
+    private mes: string;
+    private consumoEnergia: string;
+    private consumoGas: string;
+    private consumoTransporte: TransporteInterface;
+    private consumoCarbono: string;
+    private balanco: string;
 
-    constructor(
-        id: ObjectId,
+    constructor( 
+        id: ObjectId, 
         idUser: ObjectId,
         mes: string,
         consumoEnergia: string,
@@ -28,22 +28,23 @@ class Calculo{
         this.consumoGas = consumoGas;
         this.consumoTransporte = consumoTransporte;
         this.consumoCarbono = consumoCarbono;
-        this.balanco = balanco;
+        this.balanco = balanco
     }
 
+    
     getId(): ObjectId {
         return this.id;
     }
 
-    setId(id: ObjectId): void {
+    setId(id: ObjectId) {
         this.id = id;
     }
 
-    getIdUser(): ObjectId {
+    getidUser(): ObjectId {
         return this.idUser;
     }
 
-    setIdUser(idUser: ObjectId): void {
+    setidUser(idUser: ObjectId) {
         this.idUser = idUser;
     }
 
@@ -51,47 +52,49 @@ class Calculo{
         return this.mes;
     }
 
-    setMes(mes: string): void {
+    setMes(mes: string) {
         this.mes = mes;
     }
 
-    getConsumoEnergia(): string {
+    getconsumoEnergia(): string {
         return this.consumoEnergia;
     }
 
-    setConsumoEnergia(consumoEnergia: string): void {
+    setconsumoEnergia(consumoEnergia: string) {
         this.consumoEnergia = consumoEnergia;
     }
 
-    getConsumoGas(): string {
+    getconsumoGas(): string {
         return this.consumoGas;
     }
 
-    setConsumoGas(consumoGas: string): void {
+    setconsumoGas(consumoGas: string) {
         this.consumoGas = consumoGas;
     }
 
-    getConsumoTransporte(): TransporteInterface {
+    getconsumoTransporte(): TransporteInterface {
         return this.consumoTransporte;
     }
 
-    setConsumoTransporte(consumoTransporte: TransporteInterface): void {
+    setconsumoTransporte(consumoTransporte: TransporteInterface) {
         this.consumoTransporte = consumoTransporte;
     }
 
-    getConsumoCarbono(): string {
+    getconsumoCarbono(): string {
         return this.consumoCarbono;
     }
 
-    setConsumoCarbono(consumoCarbono: string): void {
+    setconsumoCarbono(consumoCarbono: string) {
         this.consumoCarbono = consumoCarbono;
     }
 
     getBalanco(): string {
-        return this.balanco;
+        return this.balanco
     }
 
-    setBalanco(balanco: string): void {
-        this.balanco = balanco;
+    setBalanco( balanco: string){
+        this.balanco = this.balanco;
     }
 }
+
+export default Calculo;
