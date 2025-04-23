@@ -11,13 +11,13 @@ class CalculoService {
     this.calculoRepository = new CalculoRepository();
   }
 
-   public async createCalculo(req: Request, res: Response): Promise<void> {
+  public async createCalculo(req: Request, res: Response): Promise<void> {
     try {
-      const {idUser, mes, consumoCarbono, consumoEnergia, consumoGas, consumoTransporte, balanco } = req.body;
+      const { idUser, mes, consumoCarbono, consumoEnergia, consumoGas, consumoTransporte, balanco } = req.body;
 
       const calculo = new Calculo(
         new ObjectId(),
-        new ObjectId(idUser),
+        new ObjectId(String(idUser)),
         mes,
         consumoCarbono,
         consumoEnergia,

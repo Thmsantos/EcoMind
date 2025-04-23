@@ -1,11 +1,11 @@
 import { MongoClient } from "mongodb";
 
-const mongoURI = "mongodb://localhost:27017";
+const mongoURI = "mongodb://127.0.0.1:27017";
 const client = new MongoClient(mongoURI);
 
-export function connectToMongoDB() {
+export async function connectToMongoDB() {
     try {
-        client.connect();
+        await client.connect();
         console.log("Conectado ao banco");
     } catch (error) {
         console.error("Erro ao conectar ao MongoDB:", error);
