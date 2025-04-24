@@ -37,7 +37,6 @@ class UserService {
       const criptSenha = await bcrypt.hash(senha, 10);
 
       const user = new User(
-        new ObjectId(),
         usuario,
         nome,
         email,
@@ -71,7 +70,6 @@ class UserService {
       const { id, usuario, nome, email, senha, status, calculos } = req.body;
 
       const updatedUser: UserInterface = {
-        id: new ObjectId(String(id)),
         usuario,
         nome,
         email,
@@ -106,6 +104,7 @@ class UserService {
       });
     }
   }
+
 }
 
 export default UserService;

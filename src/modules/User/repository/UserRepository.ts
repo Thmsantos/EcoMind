@@ -63,6 +63,25 @@ class UserRepository {
       throw new Error(String(error));
     }
   }
+
+  public async login(id: ObjectId, senha: string, usuario: string): Promise<boolean> {
+    try {
+      const userAuth = await this.searchUser(id)
+
+      if(userAuth.senha === senha && userAuth.usuario === usuario){
+        return true;
+      }
+
+      return false;
+
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+
+      throw new Error(String(error));
+    }
+  }
 }
 
 export default UserRepository;
