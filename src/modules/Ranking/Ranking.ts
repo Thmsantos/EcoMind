@@ -1,9 +1,10 @@
 import { ObjectId } from "mongodb"
 
 class Ranking {
-    id: ObjectId
-    posicao: string
-    usuario: string
+   
+   private id: ObjectId
+   private posicao: string
+   private usuario: string
 
     constructor(
         id: ObjectId,
@@ -24,6 +25,11 @@ class Ranking {
         this.id = id;
     }
 
+   /*  getPontos(): number {
+        throw new Error("Method not implemented.");
+    } */
+    
+
     getPosicao(): string {
         return this.posicao;
     }
@@ -32,11 +38,12 @@ class Ranking {
         this.posicao = posicao
     }
 
-    getUsuario(usuario: string){
-        return this.usuario
+    getUsuario(): string {
+        return this.usuario;
     }
 
     setUsuario(usuario: string){
         this.usuario = usuario
     }
 }
+export default Ranking;
