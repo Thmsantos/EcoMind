@@ -4,8 +4,7 @@ import { ObjectId } from "mongodb";
 
 
 class RankingRepository {
-    public async criar(ranking: IRanking): Promise<void> {
-        console.log("Thiii")
+    public async create(ranking: IRanking): Promise<void> {
         try{
             const db = client.db("EcoMind");
             const collection = db.collection<IRanking>("ranking");
@@ -19,7 +18,7 @@ class RankingRepository {
         }
     }
 
-    public async atualizar(id: ObjectId, pontos: number): Promise<boolean> { 
+    public async update(id: ObjectId, pontos: number): Promise<boolean> { 
         const db = client.db("EcoMind");
         const collection = db.collection<IRanking>("ranking");
 

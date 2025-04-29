@@ -12,7 +12,6 @@ class Calculo {
     private balanco: string;
 
     constructor( 
-        id: ObjectId, 
         idUser: ObjectId,
         mes: string,
         consumoEnergia: string,
@@ -21,7 +20,7 @@ class Calculo {
         consumoCarbono: string,
         balanco: string
     ) {
-        this.id = id;
+        this.id = new ObjectId();
         this.idUser = idUser;
         this.mes = mes;
         this.consumoEnergia = consumoEnergia;

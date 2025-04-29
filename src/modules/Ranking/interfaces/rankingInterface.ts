@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export interface IRanking {
-    id: ObjectId;
+    id?: ObjectId;
     usuario: string;
     pontos: number;
 }

@@ -6,22 +6,25 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run dev",
-    "dev": "node --loader ts-node/esm app.ts"
+    "start": "node --loader ts-node/esm app.ts",
+    "dev": "nodemon --watch app.ts --ext ts --exec \"node --loader ts-node/esm app.ts\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.5.0",
     "ecomind": "file:",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.15.0"
+    "mongodb": "^6.15.0",
+    "nodemailer": "^6.10.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }

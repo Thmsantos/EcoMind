@@ -14,26 +14,23 @@ class RankingService {
   public async criarRanking(req: Request, res: Response): Promise<void> {
     try {
       const { usuario, pontos } = req.body;
-        console.log("claudia")
-      // Criando novo Ranking com ObjectId gerado
+    
       const ranking = new Ranking(
-        new ObjectId(), // id
-        usuario,        // usuario
-        pontos          // pontos
+        usuario,        
+        pontos          
       );
 
       const novoRanking: IRanking = {
-        id: ranking.getId(),
         usuario: ranking.getUsuario(),
         pontos: pontos
       };
 
-      await this.rankingRepository.criar(novoRanking);
+      await this.rankingRepository.create(novoRanking);
       res.status(201).send({ success: true });
     } catch (error) {
       res.status(500).send({
-        error: "Erro ao criar ranking",
-        details: (error as Error).message,
+        error: "Erro ao criar usuário",
+        details: error.message,
       });
     }
   }
@@ -42,8 +39,8 @@ class RankingService {
     try {
       const { id, pontos } = req.body;
 
-      const objectId = new ObjectId(id); // Converte o id para ObjectId corretamente
-      const resultado = await this.rankingRepository.atualizar(objectId, pontos);
+      const objectId = new ObjectId(String(id));
+      const resultado = await this.rankingRepository.update(objectId, pontos);
 
       if (resultado) {
         res.status(200).json({ success: true });
@@ -52,8 +49,8 @@ class RankingService {
       }
     } catch (error) {
       res.status(500).send({
-        error: "Erro ao atualizar ranking",
-        details: (error as Error).message,
+        error: "Erro ao criar usuário",
+        details: error.message,
       });
     }
   }

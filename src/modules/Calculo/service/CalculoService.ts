@@ -16,7 +16,6 @@ class CalculoService {
       const { idUser, mes, consumoCarbono, consumoEnergia, consumoGas, consumoTransporte, balanco } = req.body;
 
       const calculo = new Calculo(
-        new ObjectId(),
         new ObjectId(String(idUser)),
         mes,
         consumoCarbono,

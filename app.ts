@@ -1,6 +1,8 @@
-import { connectToMongoDB } from './src/config/db.js';
 import app from './src/api/routes/route.js'
-const port = 2010;
+import { connectToMongoDB } from './src/config/db.js';
+import 'dotenv/config'
+
+const port = process.env.PORT;
 
 async function execute() {
   await connectToMongoDB();
