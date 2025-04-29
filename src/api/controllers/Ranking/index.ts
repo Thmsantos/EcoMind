@@ -1,9 +1,10 @@
 import { Router } from "express";
-import RankingService from "../../../modules/Ranking/service/RankingService.js"
+import RankingService from "../../../modules/Ranking/service/RankingService.js";
 
 const rankingRoutes = Router();
-const rankingService = new RankingService()
+const rankingService = new RankingService();
 
-rankingRoutes.get("/helloWorld", (req, res) => rankingService.helloWorld(req, res));
+rankingRoutes.post("/ranking", (req, res) => rankingService.criarRanking(req, res));
+rankingRoutes.put("/ranking", (req, res) => rankingService.atualizarRanking(req, res));
 
 export default rankingRoutes;

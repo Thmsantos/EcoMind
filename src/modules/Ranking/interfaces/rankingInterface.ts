@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
-export interface RankingInterface {
-    id: ObjectId,
-    posicao: string,
-    usuario: string,
+export interface IRanking {
+    id: ObjectId;
+    usuario: string;
+    pontos: number;
 }
