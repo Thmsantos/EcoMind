@@ -23,11 +23,10 @@ class RankingRepository {
         const collection = db.collection<IRanking>("ranking");
 
         const resultado = await collection.updateOne(
-            { _id: new ObjectId(id) },   // <-- Converte a string para ObjectId
+            { _id: new ObjectId(id) },
             { $set: { pontos } }
         );
 
-        // Se modificou um documento, retorna true; senão, false
         return resultado.modifiedCount > 0;
     }
 }

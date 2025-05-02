@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import RankingRepository from "../repository/RankingRepository.js";
 import { IRanking } from "../interfaces/rankingInterface.js";
 import { ObjectId } from "mongodb";
-import Ranking from "../Ranking.js"; // Vou assumir que você tem uma classe Ranking
+import Ranking from "../Ranking.js";
 
 class RankingService {
   private rankingRepository: RankingRepository;
