@@ -7,6 +7,7 @@ interface emailInterface {
     to: string;
     subject: string;
     text: string;
+    html: string
 }
 
 export default emailInterface;

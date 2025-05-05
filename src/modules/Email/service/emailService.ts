@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Email from "../Email";
-import emailInterface from "../interfaces/emailInterface";
-import EmailRepository from "../repository/emailRepository";
+import EmailInterface from "../interfaces/emailInterface.js";
+import EmailRepository from "../repository/EmailRepository";
 
 class EmailService {
     private emailRepository: EmailRepository;
@@ -17,7 +17,8 @@ class EmailService {
                 from,
                 to,
                 subject,
-                text
+                text,
+                html
             } = req.body;
 
             const instanceEmail = new Email(
@@ -25,19 +26,21 @@ class EmailService {
                 from,
                 to,
                 subject,
-                text
+                text,
+                html
             );
 
-            const email: emailInterface = {
+            const email: EmailInterface = {
                 id: instanceEmail.getId(),
                 userId: instanceEmail.getUserId(),
                 from: instanceEmail.getFrom(),
                 to: instanceEmail.getTo(),
                 subject: instanceEmail.getSubject(),
-                text: instanceEmail.getText()
+                text: instanceEmail.getText(),
+                html: instanceEmail.getHtml()
             }
 
-            await this.emailRepository.create(email)
+            await this.emailRepository.send(email)
         } catch (error) {
             res.status(500).send({
                 error: "Erro ao criar email",

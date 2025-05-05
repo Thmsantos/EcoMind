@@ -1,14 +1,14 @@
 import { client } from "../../../config/db.js"
-import emailInterface from "../interfaces/emailInterface.js";
+import EmailInterface from "../interfaces/emailInterface.js";
 
 class EmailRepository {
-    public async create(email: emailInterface): Promise<void> {
-        try{
+    public async send(email: EmailInterface): Promise<void> {
+        try {
             const db = client.db("EcoMind");
-            const collection = db.collection<emailInterface>("emails");
+            const collection = db.collection<EmailInterface>("emails");
             await collection.insertOne(email);
-        }catch(error: unknown){
-            if(error instanceof Error){
+        } catch (error: unknown) {
+            if (error instanceof Error) {
                 throw error;
             }
 
