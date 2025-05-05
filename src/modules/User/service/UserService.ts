@@ -15,7 +15,7 @@ class UserService {
   public async searchUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.body;
-      const user = await this.userRepository.searchUser(id);
+      const user = await this.userRepository.search(id);
 
       if (!user) {
         res.status(404).send({ error: "Usuário não encontrado" });

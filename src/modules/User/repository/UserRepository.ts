@@ -3,7 +3,7 @@ import { client } from "../../../config/db.js";
 import { UserInterface } from "../interfaces/userInterface.js";
 
 class UserRepository {
-  public async searchUser(userId: ObjectId): Promise<UserInterface> {
+  public async search(userId: ObjectId): Promise<UserInterface> {
     try {
       const db = client.db("EcoMind");
       const collection = db.collection<UserInterface>("users");
@@ -66,7 +66,7 @@ class UserRepository {
 
   public async login(id: ObjectId, senha: string, usuario: string): Promise<boolean> {
     try {
-      const userAuth = await this.searchUser(id)
+      const userAuth = await this.search(id)
 
       if(userAuth.senha === senha && userAuth.usuario === usuario){
         return true;
