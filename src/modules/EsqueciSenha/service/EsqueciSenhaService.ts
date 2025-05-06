@@ -72,7 +72,7 @@ class EsqueciSenhaService {
             console.log("Preview URL: " + nodemailer.getTestMessageUrl(t));
 
             const newEmail = {
-                userId: new ObjectId(String(user.id)),
+                userId: new ObjectId(String(userId)),
                 from: mailOptions.from,
                 to: mailOptions.to,
                 subject: mailOptions.subject,
@@ -97,7 +97,7 @@ class EsqueciSenhaService {
 
             const esqueciSenha = await this.esqueciSenhaRepository.search(new ObjectId(String(userId)));
             const user = await this.userRepository.search(new ObjectId(String(userId)));
-
+            
             if (!esqueciSenha || !user) {
                 res.status(404).send({ error: "Usuário ou código não encontrado" });
             } else {
@@ -131,12 +131,12 @@ class EsqueciSenhaService {
                 }
 
                 res.status(410).send({
-                    error: "Código inválido",
+                    error: `código inválido, status`,
                 })
             }
         } catch (error: unknown) {
             res.status(500).send({
-                error: "Erro ao criar esqueci senha",
+                error: "Erro ao verificar codigo",
                 details: (error as Error)?.message ?? String(error),
             });
         }

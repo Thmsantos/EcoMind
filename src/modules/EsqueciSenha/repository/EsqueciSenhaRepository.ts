@@ -21,7 +21,7 @@ class EsqueciSenhaRepository {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<EsqueciSenhaInterface>("EsqueciSenha");
-            const esqueciSenha = await collection.findOne({ _id: userId });
+            const esqueciSenha = await collection.findOne({ userId: userId });
             return esqueciSenha;
         } catch (error: unknown) {
             if (error instanceof Error) {
