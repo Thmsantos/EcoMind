@@ -64,16 +64,33 @@ class UserRepository {
     }
   }
 
-  public async login(id: ObjectId, senha: string, usuario: string): Promise<boolean> {
+  public async login(senha: string, usuario: string): Promise<boolean> {
     try {
-      const userAuth = await this.search(id)
+      const db = client.db("EcoMind");
+      const collection = db.collection("users");
+      const userAuth = await collection.findOne({ usuario: usuario })
 
-      if(userAuth.senha === senha && userAuth.usuario === usuario){
+      if (userAuth.senha === senha && userAuth.usuario === usuario) {
         return true;
       }
 
       return false;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
 
+      throw new Error(String(error));
+    }
+  }
+
+  public async verifyUser(usuario: string): Promise<boolean> {
+    try {
+      const db = client.db("EcoMind");
+      const collection = db.collection("users");
+      const userExists = await collection.findOne({ usuario: usuario })
+
+      return !!userExists;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw error;

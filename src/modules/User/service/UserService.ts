@@ -34,6 +34,13 @@ class UserService {
   public async createUser(req: Request, res: Response): Promise<void> {
     try {
       const { usuario, nome, email, senha, status, calculos } = req.body;
+      const userExists = await this.userRepository.verifyUser(usuario);
+
+      if (userExists) {
+        res.status(409).json({ message: "Nome de usuário já existente" });
+        return;
+      }
+
       const criptSenha = await bcrypt.hash(senha, 10);
 
       const user = new User(
@@ -46,7 +53,6 @@ class UserService {
       );
 
       const userData: UserInterface = {
-        id: user.getId(),
         usuario: user.getUsuario(),
         nome: user.getNome(),
         email: user.getEmail(),
@@ -57,10 +63,11 @@ class UserService {
 
       await this.userRepository.createUser(userData);
       res.status(201).send({ success: true });
+
     } catch (error) {
       res.status(500).send({
         error: "Erro ao criar usuário",
-        details: error.message,
+        details: error instanceof Error ? error.message : String(error),
       });
     }
   }
@@ -97,6 +104,27 @@ class UserService {
       await this.userRepository.deleteUser(id);
 
       res.status(200).send({ success: true });
+    } catch (error) {
+      res.status(500).send({
+        error: "Erro ao atualizar usuário",
+        details: error.message,
+      });
+    }
+  }
+
+  public async login(req: Request, res: Response): Promise<void> {
+    try {
+      const { usuario, senha } = req.body;
+      const criptSenha = await bcrypt.hash(senha, 10);
+
+      const auth = await this.userRepository.login(criptSenha, usuario);
+
+      if (auth) {
+        res.status(200).send({ message: 'logado' })
+        return;
+      }
+
+      res.status(401).send({ message: 'login inválido' })
     } catch (error) {
       res.status(500).send({
         error: "Erro ao atualizar usuário",
