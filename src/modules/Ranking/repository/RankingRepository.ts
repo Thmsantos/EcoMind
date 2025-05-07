@@ -5,12 +5,12 @@ import { ObjectId } from "mongodb";
 
 class RankingRepository {
     public async create(ranking: IRanking): Promise<void> {
-        try{
+        try {
             const db = client.db("EcoMind");
             const collection = db.collection<IRanking>("ranking");
             await collection.insertOne(ranking);
-        }catch(error:unknown){
-            if(error instanceof Error){
+        } catch (error: unknown) {
+            if (error instanceof Error) {
                 throw error;
             }
 
@@ -18,7 +18,7 @@ class RankingRepository {
         }
     }
 
-    public async update(id: ObjectId, pontos: number): Promise<boolean> { 
+    public async update(id: ObjectId, pontos: number): Promise<boolean> {
         const db = client.db("EcoMind");
         const collection = db.collection<IRanking>("ranking");
 
@@ -29,6 +29,22 @@ class RankingRepository {
 
         return resultado.modifiedCount > 0;
     }
+
+    public async search(): Promise<IRanking[]> {
+        const db = client.db("EcoMind");
+        const collection = db.collection<IRanking>("ranking");
+
+        return await collection.find({}).toArray();
+    }
+
+    public async searchByUser(usuario: string): Promise<IRanking | null> {
+        const db = client.db("EcoMind");
+        const collection = db.collection<IRanking>("ranking");
+
+        const data = await collection.findOne({ usuario });
+        return data;
+    }
+
 }
 
 export default RankingRepository;
