@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { TransporteInterface } from './transporteInterface';
 
 export interface CalculoInterface {
-    id: ObjectId;
+    id?: ObjectId;
     idUser: ObjectId; 
     mes: string;
     consumoEnergia: string;

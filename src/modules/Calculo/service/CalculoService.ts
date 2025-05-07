@@ -26,7 +26,6 @@ class CalculoService {
       );
 
       const calculoData: CalculoInterface = {
-        id: calculo.getId(),
         idUser: calculo.getidUser(),
         mes: calculo.getMes(),
         consumoCarbono: calculo.getconsumoCarbono(),

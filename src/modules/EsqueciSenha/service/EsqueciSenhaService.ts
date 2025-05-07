@@ -44,7 +44,6 @@ class EsqueciSenhaService {
                 instanceEsqueciSenha.setSenhasAntigas(user.senha);
 
                 const esqueciSenha: EsqueciSenhaInterface = {
-                    id: instanceEsqueciSenha.getId(),
                     userId: instanceEsqueciSenha.getUserId(),
                     codigo: instanceEsqueciSenha.getCodigo(),
                     senhasAntigas: instanceEsqueciSenha.getSenhasAntigas(),

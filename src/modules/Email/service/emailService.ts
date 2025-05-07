@@ -31,7 +31,6 @@ class EmailService {
             );
 
             const email: EmailInterface = {
-                id: instanceEmail.getId(),
                 userId: instanceEmail.getUserId(),
                 from: instanceEmail.getFrom(),
                 to: instanceEmail.getTo(),
