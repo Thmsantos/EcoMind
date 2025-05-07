@@ -5,7 +5,7 @@ import EsqueciSenha from "../EsqueciSenha.js";
 import { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.js";
 import UserRepository from "../../User/repository/UserRepository.js"
 import 'dotenv/config'
-import bcrypt from "bcrypt";
+import EmailService from "../../Email/service/emailService.js"
 import nodemailer from "nodemailer";
 import { ObjectId } from "mongodb";
 import { transporter } from "../../../config/mailer.js";
@@ -17,10 +17,13 @@ class EsqueciSenhaService {
 
     private userRepository: UserRepository;
 
+    private emailService: EmailService;
+
     constructor() {
         this.emailRepository = new EmailRepository();
         this.esqueciSenhaRepository = new EsqueciSenhaRepository();
         this.userRepository = new UserRepository();
+        this.emailService = new EmailService()
     }
 
     public async esqueciSenha(req: Request, res: Response): Promise<void> {
@@ -59,29 +62,6 @@ class EsqueciSenhaService {
                 await this.esqueciSenhaRepository.update(new ObjectId(String(userId)), isExistsEsqueciSenha)
             }
 
-            const mailOptions = {
-                from: String(process.env.SMTP_USER),
-                to: user.email,
-                subject: 'Teste de Envio de E-mail',
-                text: 'Este é um e-mail de teste enviado utilizando o Nodemailer.',
-                html: '<p>Este é um e-mail de teste enviado utilizando o Nodemailer.</p>',
-            };
-
-            const t = await transporter.sendMail(mailOptions)
-            console.log("Preview URL: " + nodemailer.getTestMessageUrl(t));
-
-            const newEmail = {
-                userId: new ObjectId(String(userId)),
-                from: mailOptions.from,
-                to: mailOptions.to,
-                subject: mailOptions.subject,
-                text: mailOptions.text,
-                html: mailOptions.html
-            }
-
-            await this.emailRepository.send(newEmail)
-
-            res.status(200).send(nodemailer.getTestMessageUrl(t))
         } catch (error: unknown) {
             res.status(500).send({
                 error: "Erro ao criar esqueci senha",
@@ -96,7 +76,7 @@ class EsqueciSenhaService {
 
             const esqueciSenha = await this.esqueciSenhaRepository.search(new ObjectId(String(userId)));
             const user = await this.userRepository.search(new ObjectId(String(userId)));
-            
+
             if (!esqueciSenha || !user) {
                 res.status(404).send({ error: "Usuário ou código não encontrado" });
             } else {

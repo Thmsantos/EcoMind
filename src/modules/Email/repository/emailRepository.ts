@@ -2,7 +2,7 @@ import { client } from "../../../config/db.js"
 import EmailInterface from "../interfaces/emailInterface.js";
 
 class EmailRepository {
-    public async send(email: EmailInterface): Promise<void> {
+    public async create(email: EmailInterface): Promise<void> {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<EmailInterface>("emails");

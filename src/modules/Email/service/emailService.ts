@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Email from "../Email";
 import EmailInterface from "../interfaces/emailInterface.js";
 import EmailRepository from "../repository/EmailRepository";
+import { transporter } from "../../../config/mailer";
+import 'dotenv/config'
 
 class EmailService {
     private emailRepository: EmailRepository;
@@ -16,10 +18,11 @@ class EmailService {
                 userId,
                 from,
                 to,
-                subject,
-                text,
-                html
             } = req.body;
+
+            const subject = "subject";
+            const text = "text";
+            const html = "html";
 
             const instanceEmail = new Email(
                 userId,
@@ -39,7 +42,30 @@ class EmailService {
                 html: instanceEmail.getHtml()
             }
 
-            await this.emailRepository.send(email)
+            await this.emailRepository.create(email)
+        } catch (error) {
+            res.status(500).send({
+                error: "Erro ao criar email",
+                details: error.message,
+            });
+        }
+    }
+
+    public async esqueciSenha(to: string, text: Number, res: Response): Promise<void> {
+        try {
+            const subject = "subject";
+            const text = "text";
+            const html = "<p>Este é um e-mail de teste enviado utilizando o Nodemailer.</p>";
+
+            const mailOptions = {
+                from: String(process.env.SMTP_USER),
+                to: to,
+                subject: subject,
+                text: text,
+                html: html,
+            };
+
+            await transporter.sendMail
         } catch (error) {
             res.status(500).send({
                 error: "Erro ao criar email",
