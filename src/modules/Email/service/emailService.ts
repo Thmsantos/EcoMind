@@ -1,78 +1,58 @@
-import { Request, Response } from "express";
-import Email from "../Email";
+import Email from "../Email.js";
 import EmailInterface from "../interfaces/emailInterface.js";
-import EmailRepository from "../repository/EmailRepository";
-import { transporter } from "../../../config/mailer";
-import 'dotenv/config'
+import EmailRepository from "../repository/EmailRepository.js";
+import { transporter } from "../../../config/mailer.js";
+import "dotenv/config";
+import { ObjectId } from "mongodb";
 
 class EmailService {
-    private emailRepository: EmailRepository;
+  private emailRepository: EmailRepository;
 
-    constructor() {
-        this.emailRepository = new EmailRepository();
+  constructor() {
+    this.emailRepository = new EmailRepository();
+  }
+
+  public async newEmail(userId: ObjectId, to: string, subject: string, text: string, html: string): Promise<void> {
+    try {
+     
+      const from = String(process.env.SMTP_USER);
+      const instanceEmail = new Email(userId, from, to, subject, text, html);
+
+      const email: EmailInterface = {
+        userId: instanceEmail.getUserId(),
+        from: instanceEmail.getFrom(),
+        to: instanceEmail.getTo(),
+        subject: instanceEmail.getSubject(),
+        text: instanceEmail.getText(),
+        html: instanceEmail.getHtml(),
+      };
+
+      await this.emailRepository.create(email);
+    } catch (error) {
+      throw new Error(`Erro ao criar e-mail ${error.message}`);
     }
+  }
 
-    public async newEmail(req: Request, res: Response): Promise<void> {
-        try {
-            const {
-                userId,
-                from,
-                to,
-            } = req.body;
+  public async esqueciSenha(to: string, text: string, userId: ObjectId): Promise<void> {
+    try {
+        console.log('oi')
+      const subject = "Recuperação de senha";
+      const html = `<p>Seu código de verificação é: <strong>${text}</strong></p>`;
 
-            const subject = "subject";
-            const text = "text";
-            const html = "html";
+      const mailOptions = {
+        from: String(process.env.SMTP_USER),
+        to: to,
+        subject: subject,
+        text: String(text),
+        html: html,
+      };
 
-            const instanceEmail = new Email(
-                userId,
-                from,
-                to,
-                subject,
-                text,
-                html
-            );
-
-            const email: EmailInterface = {
-                userId: instanceEmail.getUserId(),
-                from: instanceEmail.getFrom(),
-                to: instanceEmail.getTo(),
-                subject: instanceEmail.getSubject(),
-                text: instanceEmail.getText(),
-                html: instanceEmail.getHtml()
-            }
-
-            await this.emailRepository.create(email)
-        } catch (error) {
-            res.status(500).send({
-                error: "Erro ao criar email",
-                details: error.message,
-            });
-        }
+      await this.newEmail(userId, to, subject, text, html);
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      throw new Error(`Erro ao enviar e-mail de recuperação: ${error.message}`);
     }
-
-    public async esqueciSenha(to: string, text: Number, res: Response): Promise<void> {
-        try {
-            const subject = "subject";
-            const text = "text";
-            const html = "<p>Este é um e-mail de teste enviado utilizando o Nodemailer.</p>";
-
-            const mailOptions = {
-                from: String(process.env.SMTP_USER),
-                to: to,
-                subject: subject,
-                text: text,
-                html: html,
-            };
-
-            await transporter.sendMail
-        } catch (error) {
-            res.status(500).send({
-                error: "Erro ao criar email",
-                details: error.message,
-            });
-        }
-    }
+  }
 }
 
 export default EmailService;

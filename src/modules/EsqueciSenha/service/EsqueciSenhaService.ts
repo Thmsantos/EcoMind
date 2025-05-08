@@ -6,9 +6,7 @@ import { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.js";
 import UserRepository from "../../User/repository/UserRepository.js"
 import 'dotenv/config'
 import EmailService from "../../Email/service/emailService.js"
-import nodemailer from "nodemailer";
 import { ObjectId } from "mongodb";
-import { transporter } from "../../../config/mailer.js";
 
 class EsqueciSenhaService {
     private emailRepository: EmailRepository;
@@ -62,6 +60,8 @@ class EsqueciSenhaService {
                 await this.esqueciSenhaRepository.update(new ObjectId(String(userId)), isExistsEsqueciSenha)
             }
 
+            await this.emailService.esqueciSenha(user.email, String(codigo), new ObjectId(String(userId)));
+            res.status(200).send({ message: "Código de recuperação enviado por e-mail." });
         } catch (error: unknown) {
             res.status(500).send({
                 error: "Erro ao criar esqueci senha",
