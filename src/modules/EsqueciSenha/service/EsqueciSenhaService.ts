@@ -33,7 +33,7 @@ class EsqueciSenhaService {
             } = req.body;
 
             const user = await this.userRepository.search(new ObjectId(String(userId)));
-            const isExistsEsqueciSenha = await this.esqueciSenhaRepository.search(new ObjectId(String(userId)));
+            const isExistsEsqueciSenha = await this.esqueciSenhaRepository.search(String(userId));
 
             if (!isExistsEsqueciSenha) {
                 const instanceEsqueciSenha = new EsqueciSenha(
@@ -42,12 +42,9 @@ class EsqueciSenhaService {
                     codigo
                 );
 
-                instanceEsqueciSenha.setSenhasAntigas(user.senha);
-
                 const esqueciSenha: EsqueciSenhaInterface = {
                     userId: instanceEsqueciSenha.getUserId(),
                     codigo: instanceEsqueciSenha.getCodigo(),
-                    senhasAntigas: instanceEsqueciSenha.getSenhasAntigas(),
                     senhaAtual: instanceEsqueciSenha.getSenhaAtual(),
                     createdAt: instanceEsqueciSenha.getCreatedAt()
                 }
@@ -57,7 +54,7 @@ class EsqueciSenhaService {
                 isExistsEsqueciSenha.codigo = codigo;
                 isExistsEsqueciSenha.createdAt = new Date();
 
-                await this.esqueciSenhaRepository.update(new ObjectId(String(userId)), isExistsEsqueciSenha)
+                await this.esqueciSenhaRepository.update(String(userId), isExistsEsqueciSenha)
             }
 
             await this.emailService.esqueciSenha(user.email, String(codigo), new ObjectId(String(userId)));
@@ -74,14 +71,12 @@ class EsqueciSenhaService {
         try {
             const { codigo, senha, userId } = req.body;
 
-            const esqueciSenha = await this.esqueciSenhaRepository.search(new ObjectId(String(userId)));
+            const esqueciSenha = await this.esqueciSenhaRepository.search(String(userId));
             const user = await this.userRepository.search(new ObjectId(String(userId)));
 
             if (!esqueciSenha || !user) {
                 res.status(404).send({ error: "Usuário ou código não encontrado" });
             } else {
-
-
                 const timeCreated = esqueciSenha!.createdAt;
                 const timeNow = new Date();
                 const difference = Math.floor((timeNow.getTime() - timeCreated!.getTime()) / 60000);
@@ -90,28 +85,21 @@ class EsqueciSenhaService {
                     const { codigo, createdAt, ...esqueciSenhaSemCodigo
                     } = esqueciSenha;
 
-                    await this.esqueciSenhaRepository.update(esqueciSenha!.id!, esqueciSenhaSemCodigo);
+                    await this.esqueciSenhaRepository.update(String(esqueciSenha!.userId!), esqueciSenhaSemCodigo);
                     res.status(410).send({
                         error: "Código expirado",
                     })
                 }
 
                 if (codigo === esqueciSenha!.codigo) {
-                    const verifySenha = this.verificarSenhaAntiga(senha, esqueciSenha!);
-
-                    if (!verifySenha) {
-                        user.senha = senha;
-                        await this.userRepository.updateUser(new ObjectId(String(userId)), user)
-                    }
-
+                    user.senha = senha;
+                    await this.userRepository.updateUser(new ObjectId(String(userId)), user)
+                    res.status(200).json({ message: 'senha atualizada' })
+                } else {
                     res.status(410).send({
-                        error: "Senha já utilizada",
+                        error: `código inválido`,
                     })
                 }
-
-                res.status(410).send({
-                    error: `código inválido, status`,
-                })
             }
         } catch (error: unknown) {
             res.status(500).send({
@@ -119,11 +107,6 @@ class EsqueciSenhaService {
                 details: (error as Error)?.message ?? String(error),
             });
         }
-    }
-
-    private async verificarSenhaAntiga(senha: string, esqueciSenha: EsqueciSenhaInterface): Promise<boolean> {
-        const isNew = esqueciSenha.senhasAntigas!.includes(senha);
-        return isNew;
     }
 }
 

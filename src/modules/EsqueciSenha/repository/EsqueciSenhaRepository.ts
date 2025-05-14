@@ -17,7 +17,7 @@ class EsqueciSenhaRepository {
         }
     }
 
-    public async search(userId: ObjectId): Promise<EsqueciSenhaInterface | null> {
+    public async search(userId: String): Promise<EsqueciSenhaInterface | null> {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<EsqueciSenhaInterface>("EsqueciSenha");
@@ -33,14 +33,14 @@ class EsqueciSenhaRepository {
     }
 
     public async update(
-        userId: ObjectId,
+        userId: String,
         esqueciSenha: EsqueciSenhaInterface
     ): Promise<void> {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<EsqueciSenhaInterface>("EsqueciSenha");
 
-            await collection.updateOne({ _id: userId }, { $set: esqueciSenha })
+            await collection.updateOne({ userId: userId }, { $set: esqueciSenha })
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw error;

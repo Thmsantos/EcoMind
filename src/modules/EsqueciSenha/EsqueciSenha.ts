@@ -5,8 +5,6 @@ class EsqueciSenha {
 
   private userId: ObjectId;
 
-  private senhasAntigas: string[];
-
   private codigo: number;
   
   private senhaAtual: string;
@@ -17,7 +15,6 @@ class EsqueciSenha {
     this.id = new ObjectId();
     this.userId = userId;
     this.codigo = codigo;
-    this.senhasAntigas = [];
     this.senhaAtual = senhaAtual;
     this.createdAt = new Date();
   }
@@ -36,10 +33,6 @@ class EsqueciSenha {
 
   public getCodigo(): number {
     return this.codigo;
-  }
-
-  public getSenhasAntigas(): string[] {
-    return this.senhasAntigas;
   }
 
   public getSenhaAtual(): string {
@@ -62,16 +55,8 @@ class EsqueciSenha {
     this.userId = userId;
   }
 
-  public setSenhasAntigas(senhaAntiga: string): void {
-    this.senhasAntigas.push(senhaAntiga);
-  }
-
   public setSenhaAtual(senhaAtual: string): void {
     this.senhaAtual = senhaAtual;
-  }
-
-  public adicionarSenhaAntiga(senha: string): void {
-    this.senhasAntigas.push(senha);
   }
 }
 
