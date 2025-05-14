@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { client } from "../../../config/db.js";
+import { client } from "../../../config/database/db.js";
 import { UserInterface } from "../interfaces/userInterface.js";
 
 class UserRepository {

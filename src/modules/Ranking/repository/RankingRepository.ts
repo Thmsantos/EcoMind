@@ -1,4 +1,4 @@
-import { client } from "../../../config/db.js";
+import { client } from "../../../config/database/db.js";
 import { IRanking } from "../interfaces/rankingInterface.js";
 import { ObjectId } from "mongodb";
 

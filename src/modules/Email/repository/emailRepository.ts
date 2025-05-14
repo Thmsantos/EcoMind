@@ -1,4 +1,4 @@
-import { client } from "../../../config/db.js"
+import { client } from "../../../config/database/db.js"
 import EmailInterface from "../interfaces/emailInterface.js";
 
 class EmailRepository {

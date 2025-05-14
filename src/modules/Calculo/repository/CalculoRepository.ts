@@ -1,4 +1,4 @@
-import { client } from "../../../config/db.js";
+import { client } from "../../../config/database/db.js";
 import { CalculoInterface } from "../interfaces/calculoInterface.js";
 
 class CalculoRepository {
@@ -7,8 +7,7 @@ class CalculoRepository {
       const db = client.db("EcoMind");
       const collection = db.collection<CalculoInterface>("calculo");
 
-      const result = await collection.insertOne(calculos);
-      console.log("Calculo inserido com sucesso:", result);
+      await collection.insertOne(calculos);
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw error;

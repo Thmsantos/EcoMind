@@ -1,7 +1,7 @@
 import Email from "../Email.js";
 import EmailInterface from "../interfaces/emailInterface.js";
 import EmailRepository from "../repository/EmailRepository.js";
-import { transporter } from "../../../config/mailer.js";
+import { transporter } from "../../../config/mailer/mailer.js";
 import "dotenv/config";
 import { ObjectId } from "mongodb";
 
@@ -14,7 +14,7 @@ class EmailService {
 
   public async newEmail(userId: ObjectId, to: string, subject: string, text: string, html: string): Promise<void> {
     try {
-     
+
       const from = String(process.env.SMTP_USER);
       const instanceEmail = new Email(userId, from, to, subject, text, html);
 
@@ -35,7 +35,6 @@ class EmailService {
 
   public async esqueciSenha(to: string, text: string, userId: ObjectId): Promise<void> {
     try {
-        console.log('oi')
       const subject = "Recuperação de senha";
       const html = `<p>Seu código de verificação é: <strong>${text}</strong></p>`;
 
