@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 class EsqueciSenha {
   private id: ObjectId;
 
-  private userId: ObjectId;
+  private usuario: string;
 
   private codigo: number;
   
@@ -11,9 +11,9 @@ class EsqueciSenha {
 
   private createdAt: Date;
 
-  constructor(userId: ObjectId, senhaAtual: string, codigo: number) {
+  constructor(usuario: string, senhaAtual: string, codigo: number) {
     this.id = new ObjectId();
-    this.userId = userId;
+    this.usuario = usuario;
     this.codigo = codigo;
     this.senhaAtual = senhaAtual;
     this.createdAt = new Date();
@@ -27,8 +27,8 @@ class EsqueciSenha {
     return this.createdAt;
   }
 
-  public getUserId(): ObjectId {
-    return this.userId;
+  public getUsuario(): string {
+    return this.usuario;
   }
 
   public getCodigo(): number {
@@ -51,8 +51,8 @@ class EsqueciSenha {
     this.codigo = codigo
   }
 
-  public setUserId(userId: ObjectId): void {
-    this.userId = userId;
+  public setUsuario(usuario: string): void {
+    this.usuario = usuario;
   }
 
   public setSenhaAtual(senhaAtual: string): void {

@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 interface emailInterface {
     id?: ObjectId
-    userId: ObjectId
+    usuario: string
     from: string;
     to: string;
     subject: string;

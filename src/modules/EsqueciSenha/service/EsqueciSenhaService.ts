@@ -23,32 +23,32 @@ class EsqueciSenhaService {
 
     public async esqueciSenha(req: Request, res: Response): Promise<void> {
         try {
-            const { userId } = req.body;
+            const { usuario } = req.body;
 
-            if (!userId || !ObjectId.isValid(userId)) {
-                res.status(400).send({ error: "userId inválido ou ausente." });
+            if (!usuario) {
+                res.status(400).send({ error: "usuario invalido." });
                 return;
             }
 
             const codigo = (Math.random() * 90000 + 10000) | 0;
-            const user = await this.userRepository.search(new ObjectId(String(userId)));
+            const user = await this.userRepository.search(usuario);
 
             if (!user) {
                 res.status(404).send({ error: "Usuário não encontrado." });
                 return;
             }
 
-            const isExistsEsqueciSenha = await this.esqueciSenhaRepository.search(String(userId));
+            const isExistsEsqueciSenha = await this.esqueciSenhaRepository.search(usuario);
 
             if (!isExistsEsqueciSenha) {
                 const instanceEsqueciSenha = new EsqueciSenha(
-                    userId,
+                    usuario,
                     user.senha,
                     codigo
                 );
 
                 const esqueciSenha: EsqueciSenhaInterface = {
-                    userId: instanceEsqueciSenha.getUserId(),
+                    usuario: instanceEsqueciSenha.getUsuario(),
                     codigo: instanceEsqueciSenha.getCodigo(),
                     senhaAtual: instanceEsqueciSenha.getSenhaAtual(),
                     createdAt: instanceEsqueciSenha.getCreatedAt()
@@ -59,10 +59,10 @@ class EsqueciSenhaService {
                 isExistsEsqueciSenha.codigo = codigo;
                 isExistsEsqueciSenha.createdAt = new Date();
 
-                await this.esqueciSenhaRepository.update(String(userId), isExistsEsqueciSenha);
+                await this.esqueciSenhaRepository.update(usuario, isExistsEsqueciSenha);
             }
 
-            await this.emailService.esqueciSenha(user.email, String(codigo), new ObjectId(String(userId)));
+            await this.emailService.esqueciSenha(user.email, String(codigo), usuario);
 
             res.status(200).send({ message: "Código de recuperação enviado por e-mail." });
 
@@ -77,15 +77,15 @@ class EsqueciSenhaService {
 
     public async verificarCodigo(req: Request, res: Response): Promise<void> {
         try {
-            const { codigo, senha, userId } = req.body;
+            const { codigo, senha, userId, usuario } = req.body;
 
             if (!codigo || !senha || !userId || !ObjectId.isValid(userId)) {
                 res.status(400).send({ error: "Dados inválidos ou incompletos." });
                 return;
             }
 
-            const esqueciSenha = await this.esqueciSenhaRepository.search(String(userId));
-            const user = await this.userRepository.search(new ObjectId(String(userId)));
+            const esqueciSenha = await this.esqueciSenhaRepository.search(usuario);
+            const user = await this.userRepository.search(usuario);
 
             if (!esqueciSenha || !user) {
                 res.status(404).send({ error: "Usuário ou código não encontrado" });

@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 class Email {
   private id: ObjectId
-  private userId: ObjectId
+  private usuario: string;
   private from: string;
   private to: string;
   private subject: string;
@@ -10,16 +10,16 @@ class Email {
   private html: string;
 
   constructor(
-    userId: ObjectId,
+    usuario: string,
     from: string,
     to: string,
     subject: string,
     text: string,
     html: string
   ) {
-    this.id = new ObjectId,
-      this.userId = userId
-    this.from = from,
+      this.id = new ObjectId,
+      this.usuario = usuario;
+      this.from = from,
       this.subject = subject,
       this.to = to,
       this.text = text,
@@ -30,8 +30,8 @@ class Email {
     return this.id;
   }
 
-  public getUserId(): ObjectId {
-    return this.userId;
+  public getUsuario(): string {
+    return this.usuario;
   }
 
   public getFrom(): string {
@@ -54,8 +54,8 @@ class Email {
     return this.html;
   }
 
-  public setUserId(userId: ObjectId): void {
-    this.userId = userId;
+  public setUsuario(usuario: string): void {
+    this.usuario = usuario;
   }
 
   public setFrom(from: string): void {

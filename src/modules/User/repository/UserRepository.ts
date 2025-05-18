@@ -3,12 +3,12 @@ import { client } from "../../../config/database/db.js";
 import { UserInterface } from "../interfaces/userInterface.js";
 
 class UserRepository {
-  public async search(userId: ObjectId): Promise<UserInterface> {
+  public async search(usuario: string): Promise<UserInterface> {
     try {
       const db = client.db("EcoMind");
       const collection = db.collection<UserInterface>("users");
 
-      const user = await collection.findOne({ _id: userId });
+      const user = await collection.findOne({ usuario: usuario });
       return user;
     } catch (error: unknown) {
       if (error instanceof Error) {

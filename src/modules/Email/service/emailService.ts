@@ -3,7 +3,6 @@ import EmailInterface from "../interfaces/emailInterface.js";
 import EmailRepository from "../repository/EmailRepository.js";
 import { transporter } from "../../../config/mailer/mailer.js";
 import "dotenv/config";
-import { ObjectId } from "mongodb";
 
 class EmailService {
   private emailRepository: EmailRepository;
@@ -12,14 +11,19 @@ class EmailService {
     this.emailRepository = new EmailRepository();
   }
 
-  public async newEmail(userId: ObjectId, to: string, subject: string, text: string, html: string): Promise<void> {
+  public async newEmail(
+    usuario: string,
+    to: string,
+    subject: string,
+    text: string,
+    html: string
+  ): Promise<void> {
     try {
-
       const from = String(process.env.SMTP_USER);
-      const instanceEmail = new Email(userId, from, to, subject, text, html);
+      const instanceEmail = new Email(usuario, from, to, subject, text, html);
 
       const email: EmailInterface = {
-        userId: instanceEmail.getUserId(),
+        usuario: instanceEmail.getUsuario(),
         from: instanceEmail.getFrom(),
         to: instanceEmail.getTo(),
         subject: instanceEmail.getSubject(),
@@ -33,7 +37,11 @@ class EmailService {
     }
   }
 
-  public async esqueciSenha(to: string, text: string, userId: ObjectId): Promise<void> {
+  public async esqueciSenha(
+    to: string,
+    text: string,
+    usuario: string
+  ): Promise<void> {
     try {
       const subject = "Recuperação de senha";
       const html = `<p>Seu código de verificação é: <strong>${text}</strong></p>`;
@@ -46,7 +54,7 @@ class EmailService {
         html: html,
       };
 
-      await this.newEmail(userId, to, subject, text, html);
+      await this.newEmail(usuario, to, subject, text, html);
       await transporter.sendMail(mailOptions);
     } catch (error) {
       throw new Error(`Erro ao enviar e-mail de recuperação: ${error.message}`);

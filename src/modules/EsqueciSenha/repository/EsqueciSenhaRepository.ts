@@ -17,11 +17,11 @@ class EsqueciSenhaRepository {
         }
     }
 
-    public async search(userId: String): Promise<EsqueciSenhaInterface | null> {
+    public async search(usuario: String): Promise<EsqueciSenhaInterface | null> {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<EsqueciSenhaInterface>("EsqueciSenha");
-            const esqueciSenha = await collection.findOne({ userId: userId });
+            const esqueciSenha = await collection.findOne({ usuario: usuario });
             return esqueciSenha;
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -33,14 +33,14 @@ class EsqueciSenhaRepository {
     }
 
     public async update(
-        userId: String,
+        usuario: String,
         esqueciSenha: EsqueciSenhaInterface
     ): Promise<void> {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<EsqueciSenhaInterface>("EsqueciSenha");
 
-            await collection.updateOne({ userId: userId }, { $set: esqueciSenha })
+            await collection.updateOne({ usuario: usuario }, { $set: esqueciSenha })
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw error;

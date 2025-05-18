@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export interface EsqueciSenhaInterface {
     id?: ObjectId;
-    userId: ObjectId | String;
+    usuario:  string;
     codigo?: number;
     senhaAtual: string;
     createdAt?: Date;
