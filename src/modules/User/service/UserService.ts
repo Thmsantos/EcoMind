@@ -4,12 +4,15 @@ import { UserInterface } from "../interfaces/userInterface.js";
 import User from "../User.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
+import EmailService from "../../Email/service/emailService.js";
 
 class UserService {
   private userRepository: UserRepository;
+  private emailService: EmailService;
 
   constructor() {
     this.userRepository = new UserRepository();
+    this.emailService = new EmailService();
   }
 
   public async searchUser(req: Request, res: Response): Promise<void> {
@@ -35,6 +38,7 @@ class UserService {
     try {
       const { usuario, nome, email, senha, status, calculos } = req.body;
       const userExists = await this.userRepository.verifyUser(usuario);
+      const codigo = (Math.random() * 90000 + 10000) | 0;
 
       if (userExists) {
         res.status(409).json({ message: "Nome de usuário já existente" });
@@ -62,6 +66,7 @@ class UserService {
       };
 
       await this.userRepository.createUser(userData);
+      await this.emailService.esqueciSenha(email, String(codigo), usuario);
       res.status(201).send({ success: true });
 
     } catch (error) {
