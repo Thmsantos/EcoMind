@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { client } from "../../../config/database/db.js";
 import { UserInterface } from "../interfaces/userInterface.js";
+import bcrypt from "bcrypt";
 
 class UserRepository {
   public async search(usuario: string): Promise<UserInterface> {
@@ -69,8 +70,9 @@ class UserRepository {
       const db = client.db("EcoMind");
       const collection = db.collection("users");
       const userAuth = await collection.findOne({ usuario: usuario })
+      const senhaCorreta = await bcrypt.compare(senha, userAuth.senha);
 
-      if (userAuth.senha === senha && userAuth.usuario === usuario) {
+      if (senhaCorreta && userAuth.usuario === usuario) {
         return true;
       }
 

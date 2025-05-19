@@ -120,9 +120,8 @@ class UserService {
   public async login(req: Request, res: Response): Promise<void> {
     try {
       const { usuario, senha } = req.body;
-      const criptSenha = await bcrypt.hash(senha, 10);
 
-      const auth = await this.userRepository.login(criptSenha, usuario);
+      const auth = await this.userRepository.login(senha, usuario);
 
       if (auth) {
         res.status(200).send({ message: 'logado' })
@@ -132,7 +131,7 @@ class UserService {
       res.status(401).send({ message: 'login inválido' })
     } catch (error) {
       res.status(500).send({
-        error: "Erro ao atualizar usuário",
+        error: "Erro ao autenticar usuário",
         details: error.message,
       });
     }
