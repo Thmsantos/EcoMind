@@ -9,13 +9,11 @@ import EmailService from "../../Email/service/emailService.js";
 import { ObjectId } from "mongodb";
 
 class EsqueciSenhaService {
-    private emailRepository: EmailRepository;
     private esqueciSenhaRepository: EsqueciSenhaRepository;
     private userRepository: UserRepository;
     private emailService: EmailService;
 
     constructor() {
-        this.emailRepository = new EmailRepository();
         this.esqueciSenhaRepository = new EsqueciSenhaRepository();
         this.userRepository = new UserRepository();
         this.emailService = new EmailService();
