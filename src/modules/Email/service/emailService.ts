@@ -1,6 +1,6 @@
 import Email from "../Email.js";
 import EmailInterface from "../interfaces/emailInterface.js";
-import EmailRepository from "../repository/EmailRepository.js";
+import EmailRepository from "../repository/emailRepository.js";
 import { transporter } from "../../../config/mailer/mailer.js";
 import "dotenv/config";
 

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import EmailRepository from "../../Email/repository/EmailRepository.js";
 import EsqueciSenhaRepository from "../repository/EsqueciSenhaRepository.js";
 import EsqueciSenha from "../EsqueciSenha.js";
 import { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.js";
