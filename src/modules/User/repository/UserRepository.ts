@@ -65,7 +65,7 @@ class UserRepository {
     }
   }
 
-  public async login(senha: string, usuario: string): Promise<boolean> {
+  public async login(senha: string, usuario: string): Promise<boolean | [boolean, string]> {
     try {
       const db = client.db("EcoMind");
       const collection = db.collection("users");
@@ -73,7 +73,7 @@ class UserRepository {
       const senhaCorreta = await bcrypt.compare(senha, userAuth.senha);
 
       if (senhaCorreta && userAuth.usuario === usuario) {
-        return true;
+        return [true, String(userAuth._id)];
       }
 
       return false;

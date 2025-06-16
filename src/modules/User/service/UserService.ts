@@ -123,8 +123,8 @@ class UserService {
 
       const auth = await this.userRepository.login(senha, usuario);
 
-      if (auth) {
-        res.status(200).send({ message: 'logado' })
+      if (auth[0]) {
+        res.status(200).send({ message: 'logado', id: auth[1] })
         return;
       }
 
