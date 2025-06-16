@@ -4,12 +4,12 @@ import { UserInterface } from "../interfaces/userInterface.js";
 import bcrypt from "bcrypt";
 
 class UserRepository {
-  public async search(usuario: string): Promise<UserInterface> {
+  public async search(id: string): Promise<UserInterface> {
     try {
       const db = client.db("EcoMind");
       const collection = db.collection<UserInterface>("users");
 
-      const user = await collection.findOne({ usuario: usuario });
+      const user = await collection.findOne({ _id: new ObjectId(String(id)) });
       return user;
     } catch (error: unknown) {
       if (error instanceof Error) {
