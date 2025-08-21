@@ -5,10 +5,10 @@ import 'dotenv/config'
 const port = process.env.PORT;
 
 async function execute() {
-  await connectToMongoDB();
+  connectToMongoDB();
 
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+  app.listen(2010, () => {
+    console.log(`Server running at http://localhost:${2010}`);
   });
 }
 

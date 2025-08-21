@@ -13,15 +13,16 @@ class CalculoService {
 
   public async createCalculo(req: Request, res: Response): Promise<void> {
     try {
-      const { idUser, mes, consumoCarbono, consumoEnergia, consumoGas, consumoTransporte, balanco } = req.body;
+      const { idUser } = req.params;
+      const { mes, consumoGas, consumoEnergia, consumoTransporte, consumoCarbono, balanco } = req.body;
 
       const calculo = new Calculo(
         new ObjectId(String(idUser)),
         mes,
-        consumoCarbono,
         consumoEnergia,
         consumoGas,
         consumoTransporte,
+        consumoCarbono,
         balanco
       );
 

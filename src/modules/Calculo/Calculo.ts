@@ -7,7 +7,7 @@ class Calculo {
     private mes: string;
     private consumoEnergia: string;
     private consumoGas: string;
-    private consumoTransporte: TransporteInterface;
+    private consumoTransporte: TransporteInterface | string;
     private consumoCarbono: string;
     private balanco: string;
 
@@ -16,7 +16,7 @@ class Calculo {
         mes: string,
         consumoEnergia: string,
         consumoGas: string,
-        consumoTransporte: TransporteInterface,
+        consumoTransporte: TransporteInterface | string,
         consumoCarbono: string,
         balanco: string
     ) {
@@ -71,11 +71,11 @@ class Calculo {
         this.consumoGas = consumoGas;
     }
 
-    getconsumoTransporte(): TransporteInterface {
+    getconsumoTransporte(): TransporteInterface | string {
         return this.consumoTransporte;
     }
 
-    setconsumoTransporte(consumoTransporte: TransporteInterface) {
+    setconsumoTransporte(consumoTransporte: TransporteInterface | string) {
         this.consumoTransporte = consumoTransporte;
     }
 

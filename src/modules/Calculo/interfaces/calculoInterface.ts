@@ -7,7 +7,7 @@ export interface CalculoInterface {
     mes: string;
     consumoEnergia: string;
     consumoGas: string;
-    consumoTransporte: TransporteInterface;
+    consumoTransporte: TransporteInterface | string;
     consumoCarbono: string;
     balanco: string;
 }

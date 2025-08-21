@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-const mongoURI = "mongodb://127.0.0.1:27017";
+const mongoURI = "mongodb://127.0.0.1:27021";
 const client = new MongoClient(mongoURI);
 
 export async function connectToMongoDB() {
