@@ -16,6 +16,15 @@ class CalculoRepository {
       throw new Error(String(error));
     }
   }
+
+  public async searchCalculo(pip: any){
+    const db = client.db("Ecomind");
+    const collection = db.collection<CalculoInterface>("calculo");
+  
+    const calculo = await collection.aggregate<CalculoInterface>(pip).next();
+    console.log(calculo, 'mycalc')
+    return calculo ?? null;
+  }
 }
 
 export default CalculoRepository;

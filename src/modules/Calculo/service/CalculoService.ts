@@ -14,10 +14,12 @@ class CalculoService {
   public async createCalculo(req: Request, res: Response): Promise<void> {
     try {
       const { idUser } = req.params;
-      const { mes, consumoGas, consumoEnergia, consumoTransporte, consumoCarbono, balanco } = req.body;
+      const { mes, consumoGas, consumoEnergia, consumoTransporte, consumoCarbono } = req.body;
 
+      const balanco = String(await this.searchBalanço(mes, new ObjectId(idUser), Number(consumoCarbono)));
+      console.log(balanco, mes);
       const calculo = new Calculo(
-        new ObjectId(String(idUser)),
+        new ObjectId(idUser),
         mes,
         consumoEnergia,
         consumoGas,
@@ -45,6 +47,63 @@ class CalculoService {
       });
     }
   }
+
+  private async searchBalanço(mes: string, idUser: ObjectId, emissão: number) {
+    const beforeMonth = await this.calcMonth(mes);
+    console.log(beforeMonth, 'anr')
+    const pipeline = [
+      {
+        $match: {
+          idUser: new ObjectId(idUser),
+          mes: beforeMonth
+        }
+      }
+    ];
+  
+    const result = await this.calculoRepository.searchCalculo(pipeline);
+    console.log(result, 'oi', pipeline)
+    if (result) {
+      if (emissão > Number(result.consumoCarbono)) {
+        return "negativo";
+      } else if (emissão < Number(result.consumoCarbono)) {
+        return "positivo";
+      } else {
+        return "idem";
+      }
+    }
+  
+    return "sem histórico";
+  }
+
+  private async calcMonth(mes: string) {
+    const mesLower = mes.toLowerCase();
+    const index = this.months.indexOf(mesLower);
+  
+    if (index < 0) {
+      throw new Error(`Mês inválido: ${mes}`);
+    }
+
+    const previousIndex = (index - 1 + this.months.length) % this.months.length;
+  
+    const mesAnterior = this.months[previousIndex];
+  
+    return mesAnterior;
+  }
+
+  private months = [
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro'
+  ]
 
 }
 
