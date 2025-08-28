@@ -22,7 +22,6 @@ class CalculoRepository {
     const collection = db.collection<CalculoInterface>("calculo");
   
     const calculo = await collection.aggregate<CalculoInterface>(pip).next();
-    console.log(calculo, 'mycalc')
     return calculo ?? null;
   }
 }

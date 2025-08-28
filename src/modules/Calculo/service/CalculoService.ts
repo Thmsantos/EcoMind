@@ -17,7 +17,6 @@ class CalculoService {
       const { mes, consumoGas, consumoEnergia, consumoTransporte, consumoCarbono } = req.body;
 
       const balanco = String(await this.searchBalanço(mes, new ObjectId(idUser), Number(consumoCarbono)));
-      console.log(balanco, mes);
       const calculo = new Calculo(
         new ObjectId(idUser),
         mes,
@@ -50,7 +49,6 @@ class CalculoService {
 
   private async searchBalanço(mes: string, idUser: ObjectId, emissão: number) {
     const beforeMonth = await this.calcMonth(mes);
-    console.log(beforeMonth, 'anr')
     const pipeline = [
       {
         $match: {
@@ -61,7 +59,6 @@ class CalculoService {
     ];
   
     const result = await this.calculoRepository.searchCalculo(pipeline);
-    console.log(result, 'oi', pipeline)
     if (result) {
       if (emissão > Number(result.consumoCarbono)) {
         return "negativo";
