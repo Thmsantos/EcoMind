@@ -1,8 +1,10 @@
-import { Request, Response } from "express";
-import RankingRepository from "../repository/RankingRepository.js";
-import { IRanking } from "../interfaces/rankingInterface.js";
+import express from 'express';
+type Request = express.Request;
+type Response = express.Response;
+import RankingRepository from "../repository/RankingRepository.ts";
+import type { RankingInterface } from "../interfaces/RankingInterface.ts";
 import { ObjectId } from "mongodb";
-import Ranking from "../Ranking.js";
+import Ranking from "../Ranking.ts";
 
 class RankingService {
   private rankingRepository: RankingRepository;
@@ -20,14 +22,14 @@ class RankingService {
         pontos
       );
 
-      const novoRanking: IRanking = {
+      const novoRanking: RankingInterface = {
         usuario: ranking.getUsuario(),
         pontos: pontos
       };
 
       await this.rankingRepository.create(novoRanking);
       res.status(201).send({ success: true });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao criar usuário",
         details: error.message,
@@ -48,7 +50,7 @@ class RankingService {
       }
 
       res.status(404).json({ message: "Usuário não encontrado" });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao criar usuário",
         details: error.message,
@@ -56,15 +58,11 @@ class RankingService {
     }
   }
 
-  public async getRanking(res: Response): Promise<void> {
+  public async getRanking(id: ObjectId): Promise<void> {
     try {
       const resultado = await this.rankingRepository.search();
-      res.status(200).json({ resultado });
     } catch (error) {
-      res.status(500).send({
-        error: "Erro ao buscar dados do Ranking",
-        details: error.message,
-      });
+      throw Error('Error in fetch ranking')
     }
   }
 
@@ -78,7 +76,7 @@ class RankingService {
       } else {
         res.status(404).json({ message: "Usuário não encontrado!" })
       }
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao buscar ranking do usuário",
         details: error.message,

@@ -1,13 +1,12 @@
 import { ObjectId } from 'mongodb';
-import { TransporteInterface } from './interfaces/transporteInterface.js';
-
 class Calculo {
     private id: ObjectId;
     private idUser: ObjectId; 
     private mes: string;
+    private ano: string;
     private consumoEnergia: string;
     private consumoGas: string;
-    private consumoTransporte: TransporteInterface | string;
+    private consumoTransporte: string;
     private consumoCarbono: string;
     private balanco: string;
 
@@ -16,13 +15,15 @@ class Calculo {
         mes: string,
         consumoEnergia: string,
         consumoGas: string,
-        consumoTransporte: TransporteInterface | string,
+        ano: string,
+        consumoTransporte: string,
         consumoCarbono: string,
         balanco: string
     ) {
         this.id = new ObjectId();
         this.idUser = idUser;
         this.mes = mes;
+        this.ano = ano;
         this.consumoEnergia = consumoEnergia;
         this.consumoGas = consumoGas;
         this.consumoTransporte = consumoTransporte;
@@ -55,6 +56,14 @@ class Calculo {
         this.mes = mes;
     }
 
+    getAno(): string {
+        return this.ano;
+    }
+
+    setAno(ano: string){
+        this.ano = ano
+    }
+
     getconsumoEnergia(): string {
         return this.consumoEnergia;
     }
@@ -71,11 +80,11 @@ class Calculo {
         this.consumoGas = consumoGas;
     }
 
-    getconsumoTransporte(): TransporteInterface | string {
+    getconsumoTransporte(): string {
         return this.consumoTransporte;
     }
 
-    setconsumoTransporte(consumoTransporte: TransporteInterface | string) {
+    setconsumoTransporte(consumoTransporte: string) {
         this.consumoTransporte = consumoTransporte;
     }
 
@@ -91,8 +100,8 @@ class Calculo {
         return this.balanco
     }
 
-    setBalanco( balanco: string){
-        this.balanco = this.balanco;
+    setBalanco(balanco: string){
+        this.balanco = balanco;
     }
 }
 

@@ -1,50 +1,92 @@
-import { Request, Response } from "express";
-import CalculoRepository from "../repository/CalculoRepository.js";
-import { CalculoInterface } from "../interfaces/calculoInterface.js";
+import express from 'express';
+type Request = express.Request;
+type Response = express.Response;
+import CalculoRepository from "../repository/CalculoRepository.ts";
+import type { CalculoInterface } from "../interfaces/CalculoInterface.ts";
 import { ObjectId } from "mongodb";
-import Calculo from "../Calculo.js";
+// import Calculo from "../Calculo.ts";
+import RankingService from "../../Ranking/service/RankingService.ts";
 
 class CalculoService {
   private calculoRepository: CalculoRepository;
+  private rankingService: RankingService;
 
   constructor() {
     this.calculoRepository = new CalculoRepository();
+    this.rankingService = new RankingService();
   }
 
   public async createCalculo(req: Request, res: Response): Promise<void> {
     try {
       const { idUser } = req.params;
-      const { mes, consumoGas, consumoEnergia, consumoTransporte, consumoCarbono } = req.body;
-
-      const balanco = String(await this.searchBalanço(mes, new ObjectId(idUser), Number(consumoCarbono)));
-      const calculo = new Calculo(
-        new ObjectId(idUser),
+      const {
         mes,
-        consumoEnergia,
+        ano,
         consumoGas,
+        consumoEnergia,
         consumoTransporte,
         consumoCarbono,
-        balanco
-      );
-
+      } = req.body;
+  
+      const userId = new ObjectId(idUser);
+      const carbono = Number(consumoCarbono);
+      const balanco = String(await this.searchBalanço(mes, userId, carbono));
+  
       const calculoData: CalculoInterface = {
-        idUser: calculo.getidUser(),
-        mes: calculo.getMes(),
-        consumoCarbono: calculo.getconsumoCarbono(),
-        consumoEnergia: calculo.getconsumoEnergia(),
-        consumoGas: calculo.getconsumoGas(),
-        consumoTransporte: calculo.getconsumoTransporte(),
-        balanco: calculo.getBalanco(),
+        idUser: userId,
+        mes,
+        ano,
+        consumoGas,
+        consumoEnergia,
+        consumoTransporte,
+        consumoCarbono,
+        balanco,
       };
-
+  
       await this.calculoRepository.createCalculo(calculoData);
       res.status(201).send({ success: true });
     } catch (error) {
       res.status(500).send({
-        error: "Erro ao criar calculo",
-        details: error.message,
+        error: "Erro ao criar cálculo",
+        details: (error as Error).message,
       });
     }
+  }
+
+  // private createRanking(emissao: string, idUser: ObjectId, mes: string, ano: string){
+  //   const lastEmissao = this.searchEmissao(mes, idUser, ano);
+  //   const points = this.calcPoints(lastEmissao, 0); 
+
+  // }
+
+  // private calcPoints(lastEmissao, currentEmissao){
+    
+  // }
+
+  // private async fetchPoints(idUser: ObjectId){
+  
+  // }
+
+  private async searchEmissao(mes: string, idUser: ObjectId, ano: string){
+    const beforeMonth = await this.calcMonth(mes);
+
+    const pipeline = [
+      {
+        $match: {
+          idUser: new ObjectId(idUser),
+          mes: beforeMonth,
+          ano
+        }
+      }
+    ];
+  
+    const result = await this.calculoRepository.searchCalculo(pipeline);
+
+    if(result){
+      return result.consumoCarbono;
+    }
+
+    return null;
   }
 
   private async searchBalanço(mes: string, idUser: ObjectId, emissão: number) {

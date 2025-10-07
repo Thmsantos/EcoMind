@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
-import UserRepository from "../repository/UserRepository.js";
-import { UserInterface } from "../interfaces/userInterface.js";
-import User from "../User.js";
+import express from 'express';
+type Request = express.Request;
+type Response = express.Response;import UserRepository from "../repository/UserRepository.ts";
+import type { UserInterface } from "../interfaces/userInterface.ts";
+import User from "../User.ts";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
-import EmailService from "../../Email/service/emailService.js";
+import EmailService from "../../Email/service/emailService.ts";
 
 class UserService {
   private userRepository: UserRepository;
@@ -26,7 +27,7 @@ class UserService {
       }
 
       res.status(200).json(user);
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao criar usuário",
         details: error.message,
@@ -95,7 +96,7 @@ class UserService {
         updatedUser
       );
       res.status(201).send({ success: true });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao atualizar usuário",
         details: error.message,
@@ -109,7 +110,7 @@ class UserService {
       await this.userRepository.deleteUser(id);
 
       res.status(200).send({ success: true });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao atualizar usuário",
         details: error.message,
@@ -123,13 +124,13 @@ class UserService {
 
       const auth = await this.userRepository.login(senha, usuario);
 
-      if (auth[0]) {
-        res.status(200).send({ message: 'logado', id: auth[1] })
+      if (auth) {
+        res.status(200).send({ message: 'logado', id: auth })
         return;
       }
 
       res.status(401).send({ message: 'login inválido' })
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
         error: "Erro ao autenticar usuário",
         details: error.message,

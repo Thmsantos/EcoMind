@@ -1,4 +1,4 @@
-import { client } from "../../../config/database/db.js";
+import { client } from "../../../config/database/db.ts";
 import { EstatisticasData } from "../EstatisticasData";
 
 class EstatisticasRepository{

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import EsqueciSenhaService from "../../../modules/EsqueciSenha/service/EsqueciSenhaService.js";
+import EsqueciSenhaService from "../../../modules/EsqueciSenha/service/EsqueciSenhaService.ts";
 
 const esqueciSenhaRoutes = Router();
 const esqueciSenhaService = new EsqueciSenhaService();

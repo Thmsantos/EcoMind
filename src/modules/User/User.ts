@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { CalculoInterface } from '../Calculo/interfaces/calculoInterface';
+import type { CalculoInterface } from '../Calculo/interfaces/CalculoInterface.ts';
 
 class User {
     private id: ObjectId; 

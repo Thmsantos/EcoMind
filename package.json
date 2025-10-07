@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --loader ts-node/esm app.ts",
-    "dev": "nodemon --watch app.ts --ext ts --exec \"node --loader ts-node/esm app.ts\""
+    "dev": "nodemon --watch app.ts --ext ts --exec \"ts-node app.ts\""
   },
   "keywords": [],
   "author": "",
@@ -23,11 +23,14 @@
     "nodemailer": "^6.10.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
+    "@types/nodemailer": "^7.0.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
-    "typescript": "^5.7.3"
+    "typescript": "^5.9.3"
   }
 }

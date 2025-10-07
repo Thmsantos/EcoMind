@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
-interface emailInterface {
+export interface EmailInterface {
     id?: ObjectId
     usuario: string
     from: string;
@@ -10,4 +10,3 @@ interface emailInterface {
     html: string
 }
 
-export default emailInterface;

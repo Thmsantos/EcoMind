@@ -1,9 +1,9 @@
 import express from "express";
-import userRoutes from "../controllers/User/index.js";
-import rankingRoutes from "../controllers/Ranking/index.js";
-import calculoRoutes from "../controllers/Calculo/index.js";
-import esqueciSenhaRoutes from "../controllers/EsqueciSenha/index.js";
-import { errorHandler } from "../../config/midlleware/errorHandler.js"; 
+import userRoutes from "../controllers/User/index.ts";
+import rankingRoutes from "../controllers/Ranking/index.ts";
+import calculoRoutes from "../controllers/Calculo/index.ts";
+import esqueciSenhaRoutes from "../controllers/EsqueciSenha/index.ts";
+import { errorHandler } from "../../config/midlleware/errorHandler.ts"; 
 import cors from "cors"
 
 const app = express();

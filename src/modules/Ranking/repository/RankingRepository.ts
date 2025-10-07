@@ -1,13 +1,13 @@
-import { client } from "../../../config/database/db.js";
-import { IRanking } from "../interfaces/rankingInterface.js";
+import { client } from "../../../config/database/db.ts";
+import type { RankingInterface } from "../interfaces/RankingInterface.ts";
 import { ObjectId } from "mongodb";
 
 
 class RankingRepository {
-    public async create(ranking: IRanking): Promise<void> {
+    public async create(ranking: RankingInterface): Promise<void> {
         try {
             const db = client.db("EcoMind");
-            const collection = db.collection<IRanking>("ranking");
+            const collection = db.collection<RankingInterface>("ranking");
             await collection.insertOne(ranking);
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -20,7 +20,7 @@ class RankingRepository {
 
     public async update(id: ObjectId, pontos: number): Promise<boolean> {
         const db = client.db("EcoMind");
-        const collection = db.collection<IRanking>("ranking");
+        const collection = db.collection<RankingInterface>("ranking");
 
         const resultado = await collection.updateOne(
             { _id: new ObjectId(id) },
@@ -30,18 +30,18 @@ class RankingRepository {
         return resultado.modifiedCount > 0;
     }
 
-    public async search(): Promise<IRanking[]> {
+    public async search(): Promise<RankingInterface[]> {
         const db = client.db("EcoMind");
-        const collection = db.collection<IRanking>("ranking");
+        const collection = db.collection<RankingInterface>("ranking");
 
         return await collection.find({}).toArray();
     }
 
-    public async searchByUser(usuario: string): Promise<IRanking | null> {
+    public async searchByUser(pip: any): Promise<RankingInterface | null> {
         const db = client.db("EcoMind");
-        const collection = db.collection<IRanking>("ranking");
+        const collection = db.collection<RankingInterface>("ranking");
 
-        const data = await collection.findOne({ usuario });
+        const data = await collection.aggregate<RankingInterface>(pip).next();
         return data;
     }
 

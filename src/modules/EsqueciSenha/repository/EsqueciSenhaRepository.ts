@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
-import { client } from "../../../config/database/db.js"
-import { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.js"
+import { client } from "../../../config/database/db.ts"
+import type { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.ts"
 
 class EsqueciSenhaRepository {
     public async create(esqueciSenha: EsqueciSenhaInterface): Promise<void> {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CalculoService from "../../../modules/Calculo/service/CalculoService.js";
+import CalculoService from "../../../modules/Calculo/service/CalculoService.ts";
 
 const calculoRoutes = Router();
 const calculoService = new CalculoService();

@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongodb';
-import { TransporteInterface } from './transporteInterface';
 
 export interface CalculoInterface {
     id?: ObjectId;
     idUser: ObjectId; 
     mes: string;
+    ano: string;
     consumoEnergia: string;
     consumoGas: string;
-    consumoTransporte: TransporteInterface | string;
+    consumoTransporte:  string;
     consumoCarbono: string;
     balanco: string;
 }

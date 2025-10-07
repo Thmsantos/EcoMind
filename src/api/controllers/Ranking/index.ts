@@ -1,5 +1,5 @@
 import { Router } from "express";
-import RankingService from "../../../modules/Ranking/service/RankingService.js";
+import RankingService from "../../../modules/Ranking/service/RankingService.ts";
 
 const rankingRoutes = Router();
 const rankingService = new RankingService();

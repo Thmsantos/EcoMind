@@ -1,7 +1,7 @@
-import Email from "../Email.js";
-import EmailInterface from "../interfaces/emailInterface.js";
-import EmailRepository from "../repository/emailRepository.js";
-import { transporter } from "../../../config/mailer/mailer.js";
+import Email from "../Email.ts";
+import type { EmailInterface } from "../interfaces/EmailInterface.ts";
+import EmailRepository from "../repository/emailRepository.ts";
+import { transporter } from "../../../config/mailer/mailer.ts";
 import "dotenv/config";
 
 class EmailService {
@@ -32,7 +32,7 @@ class EmailService {
       };
 
       await this.emailRepository.create(email);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Erro ao criar e-mail ${error.message}`);
     }
   }
@@ -56,7 +56,7 @@ class EmailService {
 
       await this.newEmail(usuario, to, subject, text, html);
       await transporter.sendMail(mailOptions);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(`Erro ao enviar e-mail de recuperação: ${error.message}`);
     }
   }

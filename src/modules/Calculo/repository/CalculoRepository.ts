@@ -1,5 +1,5 @@
-import { client } from "../../../config/database/db.js";
-import { CalculoInterface } from "../interfaces/calculoInterface.js";
+import { client } from "../../../config/database/db.ts";
+import type { CalculoInterface } from "../interfaces/CalculoInterface.ts";
 
 class CalculoRepository {
   public async createCalculo(calculos: CalculoInterface): Promise<void> {

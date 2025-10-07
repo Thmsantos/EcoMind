@@ -1,10 +1,12 @@
-import { Request, Response } from "express";
-import EsqueciSenhaRepository from "../repository/EsqueciSenhaRepository.js";
-import EsqueciSenha from "../EsqueciSenha.js";
-import { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.js";
-import UserRepository from "../../User/repository/UserRepository.js";
+import express from 'express';
+type Request = express.Request;
+type Response = express.Response;
+import EsqueciSenhaRepository from "../repository/EsqueciSenhaRepository.ts";
+import EsqueciSenha from "../EsqueciSenha.ts";
+import type { EsqueciSenhaInterface } from "../interfaces/esqueciSenhaInterface.ts";
+import UserRepository from "../../User/repository/UserRepository.ts";
 import 'dotenv/config';
-import EmailService from "../../Email/service/emailService.js";
+import EmailService from "../../Email/service/emailService.ts";
 import { ObjectId } from "mongodb";
 
 class EsqueciSenhaService {
@@ -91,7 +93,7 @@ class EsqueciSenhaService {
 
             const timeCreated = esqueciSenha.createdAt;
             const timeNow = new Date();
-            const difference = Math.floor((timeNow.getTime() - timeCreated.getTime()) / 60000);
+            const difference = Math.floor((timeNow.getTime() - timeCreated!.getTime()) / 60000);
 
             if (difference > 2) {
                 const { codigo, createdAt, ...esqueciSenhaSemCodigo } = esqueciSenha;

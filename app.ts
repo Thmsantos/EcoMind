@@ -1,5 +1,5 @@
-import app from './src/api/routes/route.js'
-import { connectToMongoDB } from './src/config/database/db.js';
+import app from './src/api/routes/index.ts'
+import { connectToMongoDB } from './src/config/database/db.ts';
 import 'dotenv/config'
 
 const port = process.env.PORT;

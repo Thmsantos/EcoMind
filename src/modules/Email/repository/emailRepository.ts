@@ -1,5 +1,5 @@
-import { client } from "../../../config/database/db.js"
-import EmailInterface from "../interfaces/emailInterface.js";
+import { client } from "../../../config/database/db.ts"
+import type { EmailInterface } from "../interfaces/EmailInterface.ts";
 
 class EmailRepository {
     public async create(email: EmailInterface): Promise<void> {
