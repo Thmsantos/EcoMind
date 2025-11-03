@@ -3,7 +3,6 @@ import { ObjectId } from "mongodb";
 export interface DataUser{
     mes: string,
     ano: string,
-    balanco: string,
     emissao: string
 }
 
