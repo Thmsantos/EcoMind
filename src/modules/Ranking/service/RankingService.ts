@@ -1,10 +1,7 @@
-import express from 'express';
-type Request = express.Request;
-type Response = express.Response;
 import RankingRepository from "../repository/RankingRepository.ts";
 import type { RankingInterface } from "../interfaces/RankingInterface.ts";
-import { ObjectId } from "mongodb";
 import Ranking from "../Ranking.ts";
+import { InsertOneResult, UpdateResult } from "mongodb";
 
 class RankingService {
   private rankingRepository: RankingRepository;
@@ -13,75 +10,32 @@ class RankingService {
     this.rankingRepository = new RankingRepository();
   }
 
-  public async criarRanking(req: Request, res: Response): Promise<void> {
-    try {
-      const { usuario, pontos } = req.body;
+  public async criarRanking(user: string, pontos: number): Promise<InsertOneResult<RankingInterface> | null> {
+    const ranking = new Ranking(
+      pontos,
+      user
+    );
 
-      const ranking = new Ranking(
-        usuario,
-        pontos
-      );
+    const novoRanking: RankingInterface = {
+      usuario: ranking.getUsuario(),
+      pontos: pontos
+    };
 
-      const novoRanking: RankingInterface = {
-        usuario: ranking.getUsuario(),
-        pontos: pontos
-      };
+    const result = await this.rankingRepository.create(novoRanking);
 
-      await this.rankingRepository.create(novoRanking);
-      res.status(201).send({ success: true });
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao criar usuário",
-        details: error.message,
-      });
-    }
+    return result;
   }
 
-  public async atualizarRanking(req: Request, res: Response): Promise<void> {
-    try {
-      const { id, pontos } = req.body;
+  public async atualizarRanking(usuario: string, pontos: number): Promise<UpdateResult<RankingInterface> | null> {
+    const resultado = await this.rankingRepository.update(usuario, pontos);
 
-      const objectId = new ObjectId(String(id));
-      const resultado = await this.rankingRepository.update(objectId, pontos);
-
-      if (resultado) {
-        res.status(200).json({ success: true });
-        return;
-      }
-
-      res.status(404).json({ message: "Usuário não encontrado" });
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao criar usuário",
-        details: error.message,
-      });
-    }
+    return resultado;
   }
 
-  public async getRanking(id: ObjectId): Promise<void> {
-    try {
-      const resultado = await this.rankingRepository.search();
-    } catch (error) {
-      throw Error('Error in fetch ranking')
-    }
-  }
+  public async getRanking(pip: any): Promise<RankingInterface | null> {
+    const result = await this.rankingRepository.search(pip);
 
-  public async getRankingByUser(req: Request, res: Response): Promise<void> {
-    try {
-      const { usuario } = req.body;
-      const resultado = await this.rankingRepository.searchByUser(usuario);
-
-      if (resultado) {
-        res.status(200).json({ resultado })
-      } else {
-        res.status(404).json({ message: "Usuário não encontrado!" })
-      }
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao buscar ranking do usuário",
-        details: error.message,
-      });
-    }
+    return result;
   }
 }
 
