@@ -8,7 +8,6 @@ class Calculo {
     private consumoGas: string;
     private consumoTransporte: string;
     private consumoCarbono: string;
-    private balanco: string;
 
     constructor( 
         idUser: ObjectId,
@@ -18,7 +17,6 @@ class Calculo {
         ano: string,
         consumoTransporte: string,
         consumoCarbono: string,
-        balanco: string
     ) {
         this.id = new ObjectId();
         this.idUser = idUser;
@@ -28,7 +26,6 @@ class Calculo {
         this.consumoGas = consumoGas;
         this.consumoTransporte = consumoTransporte;
         this.consumoCarbono = consumoCarbono;
-        this.balanco = balanco
     }
 
     
@@ -94,14 +91,6 @@ class Calculo {
 
     setconsumoCarbono(consumoCarbono: string) {
         this.consumoCarbono = consumoCarbono;
-    }
-
-    getBalanco(): string {
-        return this.balanco
-    }
-
-    setBalanco(balanco: string){
-        this.balanco = balanco;
     }
 }
 

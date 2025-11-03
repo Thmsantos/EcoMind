@@ -9,5 +9,4 @@ export interface CalculoInterface {
     consumoGas: string;
     consumoTransporte:  string;
     consumoCarbono: string;
-    balanco: string;
 }
