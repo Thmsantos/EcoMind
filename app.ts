@@ -2,8 +2,6 @@ import app from './src/api/routes/index.ts'
 import { connectToMongoDB } from './src/config/database/db.ts';
 import 'dotenv/config'
 
-const port = process.env.PORT;
-
 async function execute() {
   connectToMongoDB();
 
