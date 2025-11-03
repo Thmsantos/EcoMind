@@ -1,14 +1,15 @@
+import { InsertOneResult, UpdateResult } from "mongodb";
 import { client } from "../../../config/database/db.ts";
 import type { RankingInterface } from "../interfaces/RankingInterface.ts";
-import { ObjectId } from "mongodb";
-
 
 class RankingRepository {
-    public async create(ranking: RankingInterface): Promise<void> {
+    public async create(ranking: RankingInterface): Promise<InsertOneResult<RankingInterface> | null> {
         try {
             const db = client.db("EcoMind");
             const collection = db.collection<RankingInterface>("ranking");
-            await collection.insertOne(ranking);
+            const result = await collection.insertOne(ranking);
+
+            return result || null;
         } catch (error: unknown) {
             if (error instanceof Error) {
                 throw error;
@@ -18,26 +19,19 @@ class RankingRepository {
         }
     }
 
-    public async update(id: ObjectId, pontos: number): Promise<boolean> {
+    public async update(usuario: string, pontos: number): Promise<UpdateResult<RankingInterface> | null> {
         const db = client.db("EcoMind");
         const collection = db.collection<RankingInterface>("ranking");
 
         const resultado = await collection.updateOne(
-            { _id: new ObjectId(id) },
+            { usuario },
             { $set: { pontos } }
         );
 
-        return resultado.modifiedCount > 0;
+        return resultado || null;
     }
 
-    public async search(): Promise<RankingInterface[]> {
-        const db = client.db("EcoMind");
-        const collection = db.collection<RankingInterface>("ranking");
-
-        return await collection.find({}).toArray();
-    }
-
-    public async searchByUser(pip: any): Promise<RankingInterface | null> {
+    public async search(pip: any): Promise<RankingInterface | null> {
         const db = client.db("EcoMind");
         const collection = db.collection<RankingInterface>("ranking");
 
