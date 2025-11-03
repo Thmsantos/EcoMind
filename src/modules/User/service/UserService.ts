@@ -1,11 +1,12 @@
 import express from 'express';
 type Request = express.Request;
-type Response = express.Response;import UserRepository from "../repository/UserRepository.ts";
+type Response = express.Response; import UserRepository from "../repository/UserRepository.ts";
 import type { UserInterface } from "../interfaces/userInterface.ts";
 import User from "../User.ts";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 import EmailService from "../../Email/service/emailService.ts";
+import { CalculoInterface } from '../../Calculo/interfaces/CalculoInterface.ts';
 
 class UserService {
   private userRepository: UserRepository;
@@ -16,127 +17,112 @@ class UserService {
     this.emailService = new EmailService();
   }
 
-  public async searchUser(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.body;
-      const user = await this.userRepository.search(id);
+  public async searchUser(pip: any): Promise<UserInterface | null> {
+    const user = await this.userRepository.search(pip);
 
-      if (!user) {
-        res.status(404).send({ error: "Usuário não encontrado" });
-        return;
-      }
-
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao criar usuário",
-        details: error.message,
-      });
-    }
+    return user || null;
   }
 
-  public async createUser(req: Request, res: Response): Promise<void> {
-    try {
-      const { usuario, nome, email, senha, status, calculos } = req.body;
-      const userExists = await this.userRepository.verifyUser(usuario);
-      const codigo = (Math.random() * 90000 + 10000) | 0;
+  public async createUser(
+    usuario: string,
+    nome: string,
+    email: string,
+    senha: string,
+    status: boolean,
+    calculos: CalculoInterface[],
+  ): Promise<void> {
 
-      if (userExists) {
-        res.status(409).json({ message: "Nome de usuário já existente" });
-        return;
-      }
+    const userExists = await this.userRepository.verifyUser(usuario);
+    const codigo = (Math.random() * 90000 + 10000) | 0;
 
-      const criptSenha = await bcrypt.hash(senha, 10);
+    if (userExists) {
 
-      const user = new User(
-        usuario,
-        nome,
-        email,
-        criptSenha,
-        status,
-        calculos
-      );
-
-      const userData: UserInterface = {
-        usuario: user.getUsuario(),
-        nome: user.getNome(),
-        email: user.getEmail(),
-        senha: user.getSenha(),
-        status: user.getStatus(),
-        calculos: user.getCalculos(),
-      };
-
-      await this.userRepository.createUser(userData);
-      await this.emailService.esqueciSenha(email, String(codigo), usuario);
-      res.status(201).send({ success: true });
-
-    } catch (error) {
-      res.status(500).send({
-        error: "Erro ao criar usuário",
-        details: error instanceof Error ? error.message : String(error),
-      });
+      return;
     }
+
+    const criptSenha = await bcrypt.hash(senha, 10);
+
+    const user = new User(
+      usuario,
+      nome,
+      email,
+      criptSenha,
+      status,
+      calculos
+    );
+
+    const userData: UserInterface = {
+      usuario: user.getUsuario(),
+      nome: user.getNome(),
+      email: user.getEmail(),
+      senha: user.getSenha(),
+      status: user.getStatus(),
+      calculos: user.getCalculos(),
+    };
+
+    await this.userRepository.createUser(userData);
+    await this.emailService.esqueciSenha(email, String(codigo), usuario);
+}
+
+  public async updateUser(req: Request, res: Response): Promise < void> {
+  try {
+    const { id, usuario, nome, email, senha, status, calculos } = req.body;
+
+    const updatedUser: UserInterface = {
+      usuario,
+      nome,
+      email,
+      senha,
+      status,
+      calculos,
+    };
+
+    await this.userRepository.updateUser(
+      new ObjectId(String(id)),
+      updatedUser
+    );
+    res.status(201).send({ success: true });
+  } catch(error: any) {
+    res.status(500).send({
+      error: "Erro ao atualizar usuário",
+      details: error.message,
+    });
   }
+}
 
-  public async updateUser(req: Request, res: Response): Promise<void> {
-    try {
-      const { id, usuario, nome, email, senha, status, calculos } = req.body;
+  public async deleteUser(req: Request, res: Response): Promise < void> {
+  try {
+    const { id } = req.body;
+    await this.userRepository.deleteUser(id);
 
-      const updatedUser: UserInterface = {
-        usuario,
-        nome,
-        email,
-        senha,
-        status,
-        calculos,
-      };
+    res.status(200).send({ success: true });
+  } catch(error: any) {
+    res.status(500).send({
+      error: "Erro ao atualizar usuário",
+      details: error.message,
+    });
+  }
+}
 
-      await this.userRepository.updateUser(
-        new ObjectId(String(id)),
-        updatedUser
-      );
-      res.status(201).send({ success: true });
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao atualizar usuário",
-        details: error.message,
-      });
+  public async login(req: Request, res: Response): Promise < void> {
+  try {
+    const { usuario, senha } = req.body;
+
+    const auth = await this.userRepository.login(senha, usuario);
+
+    if(auth) {
+      res.status(200).send({ message: 'logado', id: auth })
+      return;
     }
-  }
-
-  public async deleteUser(req: Request, res: Response): Promise<void> {
-    try {
-      const { id } = req.body;
-      await this.userRepository.deleteUser(id);
-
-      res.status(200).send({ success: true });
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao atualizar usuário",
-        details: error.message,
-      });
-    }
-  }
-
-  public async login(req: Request, res: Response): Promise<void> {
-    try {
-      const { usuario, senha } = req.body;
-
-      const auth = await this.userRepository.login(senha, usuario);
-
-      if (auth) {
-        res.status(200).send({ message: 'logado', id: auth })
-        return;
-      }
 
       res.status(401).send({ message: 'login inválido' })
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Erro ao autenticar usuário",
-        details: error.message,
-      });
-    }
+  } catch(error: any) {
+    res.status(500).send({
+      error: "Erro ao autenticar usuário",
+      details: error.message,
+    });
   }
+}
 
 }
 
