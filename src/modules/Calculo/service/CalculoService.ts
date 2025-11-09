@@ -1,57 +1,49 @@
-import express from 'express';
-type Request = express.Request;
-type Response = express.Response;
 import CalculoRepository from "../repository/CalculoRepository.ts";
 import type { CalculoInterface } from "../interfaces/CalculoInterface.ts";
-import { ObjectId } from "mongodb";
-// import Calculo from "../Calculo.ts";
+import { InsertOneResult, ObjectId } from "mongodb";
 import RankingService from "../../Ranking/service/RankingService.ts";
 import UserService from '../../User/service/UserService.ts';
+import EstatisticasService from '../../Estatisticas/service/EstatisticasService.ts';
 
 class CalculoService {
   private calculoRepository: CalculoRepository;
   private rankingService: RankingService;
   private userService: UserService;
+  private estatisticasService: EstatisticasService;
 
   constructor() {
     this.calculoRepository = new CalculoRepository();
     this.rankingService = new RankingService();
     this.userService = new UserService();
+    this.estatisticasService = new EstatisticasService();
   }
 
-  public async createCalculo(req: Request, res: Response): Promise<void> {
-    try {
-      const { idUser } = req.params;
-      const {
-        mes,
-        ano,
-        consumoGas,
-        consumoEnergia,
-        consumoTransporte,
-        consumoCarbono,
-      } = req.body;
+  public async createCalculo(calculo: CalculoInterface, idUser: string): Promise<InsertOneResult<CalculoInterface> | null> {
+    const calculoData: CalculoInterface = {
+      idUser: new ObjectId(idUser),
+      mes: calculo.mes,
+      ano: calculo.ano,
+      consumoGas: calculo.consumoGas,
+      consumoEnergia: calculo.consumoEnergia,
+      consumoTransporte: calculo.consumoEnergia,
+      consumoCarbono: calculo.consumoCarbono,
+    };
 
-      const userId = new ObjectId(idUser);
 
-      const calculoData: CalculoInterface = {
-        idUser: userId,
-        mes,
-        ano,
-        consumoGas,
-        consumoEnergia,
-        consumoTransporte,
-        consumoCarbono,
-      };
+    await this.estatisticasService.createStats({
+      idUser: idUser,
+      dataUser: {
+        mes: calculo.mes,
+        ano: calculo.ano,
+        emissao: calculo.consumoCarbono
+      }
+    });
 
-      await this.calculoRepository.createCalculo(calculoData);
-      await this.createOrUpdateRanking(consumoCarbono, userId);
-      res.status(201).send({ success: true });
-    } catch (error) {
-      res.status(500).send({
-        error: "Erro ao criar cálculo",
-        details: (error as Error).message,
-      });
-    }
+    const createdCalculo = await this.calculoRepository.createCalculo(calculoData);
+
+    await this.createOrUpdateRanking(calculo.consumoCarbono, new ObjectId(idUser));
+
+    return createdCalculo;
   }
 
   private async createOrUpdateRanking(emissao: string, idUser: ObjectId) {
@@ -68,25 +60,22 @@ class CalculoService {
 
     const totalPoints = Number(currentPoints ?? 0) + earnedPoints;
 
-    if (currentPoints != null) {
-      await this.rankingService.atualizarRanking(user.usuario, totalPoints);
-    } else {
-      await this.rankingService.criarRanking(user.usuario, totalPoints);
-    }
+    await (
+      currentPoints != null
+        ? this.rankingService.atualizarRanking(user.usuario, totalPoints)
+        : this.rankingService.criarRanking(user.usuario, totalPoints)
+    );
   }
 
 
   private async fetchPoints(idUser: ObjectId): Promise<Number | null> {
-    const pipeline = [
-      {
-        $match: {
-          idUser: new ObjectId(idUser),
-        }
+    const pipeline = [{
+      $match: {
+        idUser: new ObjectId(idUser),
       }
-    ]
+    }]
 
     const result = await this.rankingService.getRanking(pipeline);
-
     return result ? result.pontos : null;
   }
 }
