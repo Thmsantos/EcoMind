@@ -1,7 +1,7 @@
 import Email from "../Email.ts";
 import type { EmailInterface } from "../interfaces/EmailInterface.ts";
 import EmailRepository from "../repository/emailRepository.ts";
-import { transporter } from "../../../config/mailer/mailer.ts";
+// import { transporter } from "../../../config/mailer/mailer.ts";
 import "dotenv/config";
 
 class EmailService {
@@ -10,7 +10,7 @@ class EmailService {
   constructor() {
     this.emailRepository = new EmailRepository();
   }
-
+/* 
   public async newEmail(
     usuario: string,
     to: string,
@@ -35,7 +35,7 @@ class EmailService {
     } catch (error: any) {
       throw new Error(`Erro ao criar e-mail ${error.message}`);
     }
-  }
+  } */
 
   public async esqueciSenha(
     to: string,
@@ -54,8 +54,8 @@ class EmailService {
         html: html,
       };
 
-      await this.newEmail(usuario, to, subject, text, html);
-      await transporter.sendMail(mailOptions);
+      // await this.newEmail(usuario, to, subject, text, html);
+      // await transporter.sendMail(mailOptions);
     } catch (error: any) {
       throw new Error(`Erro ao enviar e-mail de recuperação: ${error.message}`);
     }
