@@ -1,5 +1,5 @@
 import express from "express";
-import userRoutes from "../controllers/User/index.ts";
+import userRoutes from "./User/index.ts";
 import rankingRoutes from "../controllers/Ranking/index.ts";
 import calculoRoutes from "../controllers/Calculo/index.ts";
 import esqueciSenhaRoutes from "../controllers/EsqueciSenha/index.ts";

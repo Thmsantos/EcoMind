@@ -1,0 +1,13 @@
+// src/routes/userRoutes.ts
+import { Router } from "express";
+import UserController from "../../controllers/User/UserController";
+
+const userRoutes = Router();
+const userController = new UserController();
+
+userRoutes.get("/:id", (req, res) => userController.searchUser(req, res));
+userRoutes.post("/create", (req, res) => userController.createUser(req, res));
+userRoutes.put("/:id", (req, res) => userController.updateUser(req, res))
+userRoutes.delete("/:id", (req, res) => userController.deleteUser(req, res))
+
+export default userRoutes;

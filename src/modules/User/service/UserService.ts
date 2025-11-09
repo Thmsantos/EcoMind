@@ -4,7 +4,7 @@ type Response = express.Response; import UserRepository from "../repository/User
 import type { UserInterface } from "../interfaces/userInterface.ts";
 import User from "../User.ts";
 import bcrypt from "bcrypt";
-import { ObjectId } from "mongodb";
+import { DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
 import EmailService from "../../Email/service/emailService.ts";
 import { CalculoInterface } from '../../Calculo/interfaces/CalculoInterface.ts';
 
@@ -30,14 +30,14 @@ class UserService {
     senha: string,
     status: boolean,
     calculos: CalculoInterface[],
-  ): Promise<void> {
+  ): Promise<InsertOneResult<UserInterface> | null> {
 
     const userExists = await this.userRepository.verifyUser(usuario);
     const codigo = (Math.random() * 90000 + 10000) | 0;
 
     if (userExists) {
 
-      return;
+      return null;
     }
 
     const criptSenha = await bcrypt.hash(senha, 10);
@@ -60,69 +60,57 @@ class UserService {
       calculos: user.getCalculos(),
     };
 
-    await this.userRepository.createUser(userData);
+    const createdUser = await this.userRepository.createUser(userData);
     await this.emailService.esqueciSenha(email, String(codigo), usuario);
-}
+    return createdUser;
+  }
 
-  public async updateUser(req: Request, res: Response): Promise < void> {
-  try {
-    const { id, usuario, nome, email, senha, status, calculos } = req.body;
+  public async updateUser(user: UserInterface, id: string): Promise<UpdateResult<Document> | null> {
 
-    const updatedUser: UserInterface = {
-      usuario,
-      nome,
-      email,
-      senha,
-      status,
-      calculos,
+    const typedUser: UserInterface = {
+      usuario: user.usuario,
+      nome: user.nome,
+      email: user.email,
+      senha: user.senha,
+      status: user.status,
+      calculos: user.calculos,
     };
 
-    await this.userRepository.updateUser(
+    const updatedUser = await this.userRepository.updateUser(
       new ObjectId(String(id)),
-      updatedUser
+      typedUser
     );
-    res.status(201).send({ success: true });
-  } catch(error: any) {
-    res.status(500).send({
-      error: "Erro ao atualizar usuário",
-      details: error.message,
-    });
+
+    return updatedUser;
   }
-}
 
-  public async deleteUser(req: Request, res: Response): Promise < void> {
-  try {
-    const { id } = req.body;
-    await this.userRepository.deleteUser(id);
+  public async deleteUser(id: string): Promise<DeleteResult | null> {
+    const deletedUser = await this.userRepository.deleteUser(new ObjectId(String(id)),);
 
-    res.status(200).send({ success: true });
-  } catch(error: any) {
-    res.status(500).send({
-      error: "Erro ao atualizar usuário",
-      details: error.message,
-    });
+    return deletedUser;
   }
-}
 
-  public async login(req: Request, res: Response): Promise < void> {
-  try {
-    const { usuario, senha } = req.body;
+  public async login(usuario: string, senha: string): Promise<string | null> {
+    const pip = [
+      {
+        $match: { usuario: usuario }
+      }
+    ];
 
-    const auth = await this.userRepository.login(senha, usuario);
+    const user = await this.searchUser(pip);
 
-    if(auth) {
-      res.status(200).send({ message: 'logado', id: auth })
-      return;
+    if (!user) {
+      return null;
     }
 
-      res.status(401).send({ message: 'login inválido' })
-  } catch(error: any) {
-    res.status(500).send({
-      error: "Erro ao autenticar usuário",
-      details: error.message,
-    });
+    const correctPass = await bcrypt.compare(senha, user.senha);
+
+    if (!correctPass) {
+      return null;
+    }
+
+    return String(user.id);
   }
-}
 
 }
 
