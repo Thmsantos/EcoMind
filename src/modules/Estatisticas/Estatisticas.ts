@@ -39,3 +39,5 @@ class Estatisticas {
         this.dataUser = dataUser;
     }
 }
+
+export default Estatisticas;

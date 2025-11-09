@@ -1,34 +1,24 @@
+import { AggregationCursor, InsertOneResult } from "mongodb";
 import { client } from "../../../config/database/db.ts";
 import { EstatisticasData } from "../EstatisticasData";
 
-class EstatisticasRepository{
-    public async createEstatisticas(data: EstatisticasData): Promise<void>{
-        try{
-            const db = client.db("EcoMind")
-            const collection = db.collection<EstatisticasData>("estatisticas");
+class EstatisticasRepository {
+  public async createEstatisticas(data: EstatisticasData): Promise<InsertOneResult<EstatisticasData> | null> {
+    const db = client.db("EcoMind")
+    const collection = db.collection<EstatisticasData>("estatisticas");
 
-            await collection.insertOne(data);
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-              throw error;
-            }
-      
-            throw new Error(String(error));
-          }
-    }
+    const insertedData = await collection.insertOne(data);
 
-    public async searchEstatisticas(pip: any): Promise<any>{
-        try{
-            const db = client.db("EcoMind")
-            const collection = db.collection<EstatisticasData>("estatisticas");
+    return insertedData;
+  }
 
-            return await collection.aggregate<EstatisticasData>(pip).next();
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-              throw error;
-            }
-      
-            throw new Error(String(error));
-          }
-    }
+  public async searchEstatisticas(pip: any): Promise<EstatisticasData | null> {
+    const db = client.db("EcoMind");
+    const collection = db.collection<EstatisticasData>("estatisticas");
+
+    const findedData = await collection.aggregate<EstatisticasData>(pip).next();
+    return findedData;
+  }
 }
+
+export default EstatisticasRepository;
