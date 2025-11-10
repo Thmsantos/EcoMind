@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb"
 import type { CalculoInterface } from "../../Calculo/interfaces/CalculoInterface.ts"
 
 export interface UserInterface{
-    id?: ObjectId
+    _id?: ObjectId
     usuario: string
     nome: string
     email: string

@@ -109,7 +109,7 @@ class UserService {
       return null;
     }
 
-    return String(user.id);
+    return String(user._id);
   }
 
 }
