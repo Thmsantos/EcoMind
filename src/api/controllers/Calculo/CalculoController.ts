@@ -10,10 +10,8 @@ export default class CalculoController {
 
     public async createCalculo(req: Request, res: Response): Promise<void> {
         try {
-            const stats = req.body;
-            const idUser = req.params.idUser;
-
-            const createdCalculo = await this.calculoService.createCalculo(stats, idUser);
+            const data = req.body;
+            const createdCalculo = await this.calculoService.createCalculo(data, data.idUser);
 
             if (!createdCalculo) {
                 res.status(400).json({ message: 'Não foi possível criar o cálculo' });
