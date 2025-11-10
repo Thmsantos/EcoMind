@@ -12,17 +12,17 @@ class EstatisticasRepository {
     return insertedData;
   }
 
-  public async searchEstatisticas(pip: any): Promise<EstatisticasData | null> {
+  public async searchEstatisticas(id: string): Promise<EstatisticasData[] | null> {
     const db = client.db("EcoMind");
     const collection = db.collection<EstatisticasData>("estatisticas");
 
-    pip = [
+    const pip = [
       {
-        $match: { idUser: new ObjectId(String(pip[0])) }
+        $match: { idUser: id }
       }
     ]
 
-    const findedData = await collection.aggregate<EstatisticasData>(pip).next();
+    const findedData = await collection.aggregate<EstatisticasData>(pip).toArray();
     return findedData;
   }
 }

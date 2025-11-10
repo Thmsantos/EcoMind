@@ -15,8 +15,8 @@ class EstatisticasService {
         return createdStats;
     }
 
-    public async searchEstatisticas(pip: any): Promise<EstatisticasData | null> {
-        const findedStats = await this.estatisticasRepostiory.searchEstatisticas(pip);
+    public async searchEstatisticas(id: string): Promise<EstatisticasData[] | null> {
+        const findedStats = await this.estatisticasRepostiory.searchEstatisticas(id);
 
         return findedStats;
     }
