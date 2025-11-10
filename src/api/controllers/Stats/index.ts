@@ -10,12 +10,10 @@ export default class StatsController {
 
     public async searchStats(req: Request, res: Response): Promise<void> {
         try {
-            const pip = req.body;
+            const id = req.params.id;
 
-            const stats = await this.statsService.searchEstatisticas(pip);
-            res.status(200).json({
-                stats
-            })
+            const stats = await this.statsService.searchEstatisticas(String(id));
+            res.status(200).json(stats)
         } catch (error) {
             console.error('erro ao buscar stats', error);
             res.status(500).json({
