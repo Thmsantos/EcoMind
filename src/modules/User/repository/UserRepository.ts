@@ -1,15 +1,15 @@
-import { DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
+import { AggregationCursor, DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
 import { client } from "../../../config/database/db.ts";
 import type { UserInterface } from "../interfaces/userInterface.ts";
 import bcrypt from "bcrypt";
 
 class UserRepository {
-  public async search(id: string): Promise<UserInterface | null> {
+  public async search(pip: any): Promise<UserInterface | null> {
     try {
       const db = client.db("EcoMind");
       const collection = db.collection<UserInterface>("users");
 
-      const user = await collection.findOne({ _id: new ObjectId(String(id)) });
+      const user = await collection.aggregate<UserInterface>(pip).next();
 
       return user;
     } catch (error: unknown) {
