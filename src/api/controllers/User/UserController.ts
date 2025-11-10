@@ -79,12 +79,22 @@ export default class UserController {
 
     public async login(req: Request, res: Response): Promise<void> {
         try{    
-            const {usuario, password} = req.body;
+            const { usuario, senha } = req.body;
 
-            const loggedUser = await this.userService.login(usuario, password);
-            res.status(200).json({
-                message: "Login realizado com sucesso!"
+            const loggedUser = await this.userService.login(usuario, senha );
+
+            if (loggedUser) {
+                res.status(200).json({
+                    id: loggedUser,
+                    message: "Login realizado com sucesso!"
+                })
+                return;
+            };
+
+            res.status(401).json({
+                message: "Login inváildo"
             })
+
         } catch(error){
             console.error('Erro ao realizar login', error)
             res.status(500).json({
