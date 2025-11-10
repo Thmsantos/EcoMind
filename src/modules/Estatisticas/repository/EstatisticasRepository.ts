@@ -1,4 +1,4 @@
-import { AggregationCursor, InsertOneResult } from "mongodb";
+import { AggregationCursor, InsertOneResult, ObjectId } from "mongodb";
 import { client } from "../../../config/database/db.ts";
 import { EstatisticasData } from "../EstatisticasData";
 
@@ -15,6 +15,12 @@ class EstatisticasRepository {
   public async searchEstatisticas(pip: any): Promise<EstatisticasData | null> {
     const db = client.db("EcoMind");
     const collection = db.collection<EstatisticasData>("estatisticas");
+
+    pip = [
+      {
+        $match: { idUser: new ObjectId(String(pip[0])) }
+      }
+    ]
 
     const findedData = await collection.aggregate<EstatisticasData>(pip).next();
     return findedData;
