@@ -10,8 +10,8 @@ export default class UserController {
 
     public async searchUser(req: Request, res: Response): Promise<void> {
         try {
-            const pip = req.params;
-            const user = await this.userService.searchUser(pip);
+            const id = req.params.id;
+            const user = await this.userService.searchUserById(id);
             res.json(user);
         } catch (error) {
             console.error(error);

@@ -1,24 +1,28 @@
-import { AggregationCursor, DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
+import {
+  DeleteResult,
+  InsertOneResult,
+  ObjectId,
+  UpdateResult,
+  WithId
+} from "mongodb";
 import { client } from "../../../config/database/db.ts";
 import type { UserInterface } from "../interfaces/userInterface.ts";
-import bcrypt from "bcrypt";
 
 class UserRepository {
   public async search(pip: any): Promise<UserInterface | null> {
-    try {
-      const db = client.db("EcoMind");
-      const collection = db.collection<UserInterface>("users");
+    const db = client.db("EcoMind");
+    const collection = db.collection<UserInterface>("users");
 
-      const user = await collection.aggregate<UserInterface>(pip).next();
+    const user = await collection.aggregate<UserInterface>(pip).next();
+    return user;
+  }
 
-      return user;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw error;
-      }
+  public async searchById(id: ObjectId): Promise<WithId<UserInterface> | null> {
+    const db = client.db("EcoMind");
+    const collection = db.collection<UserInterface>("users");
 
-      throw new Error(String(error));
-    }
+    const user = await collection.findOne({ _id: id });
+    return user;
   }
 
   public async createUser(user: UserInterface): Promise<InsertOneResult<UserInterface>> {
@@ -47,11 +51,11 @@ class UserRepository {
   }
 
   public async verifyUser(usuario: string): Promise<boolean> {
-      const db = client.db("EcoMind");
-      const collection = db.collection("users");
-      const userExists = await collection.findOne({ usuario: usuario })
+    const db = client.db("EcoMind");
+    const collection = db.collection("users");
+    const userExists = await collection.findOne({ usuario: usuario })
 
-      return !!userExists;
+    return !!userExists;
   }
 }
 

@@ -23,6 +23,12 @@ class UserService {
     return user || null;
   }
 
+  public async searchUserById(id: string): Promise<UserInterface | null> {
+    const user = await this.userRepository.searchById(new ObjectId(id));
+
+    return user || null;
+  }
+
   public async createUser(
     usuario: string,
     nome: string,
