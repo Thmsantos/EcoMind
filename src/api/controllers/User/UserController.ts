@@ -29,7 +29,7 @@ export default class UserController {
                 email,
                 senha,
                 true,
-                []
+                "0",
             );
 
             if (!createdUser) {
@@ -50,7 +50,7 @@ export default class UserController {
     public async updateUser(req: Request, res: Response): Promise<void> {
         try{
             const id = req.params.id;
-            const user = req.body.user;
+            const user = req.body;
 
             const updatedUser = await this.userService.updateUser(user, id)
             res.status(200).json({

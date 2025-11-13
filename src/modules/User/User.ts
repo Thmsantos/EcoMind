@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb';
-import type { CalculoInterface } from '../Calculo/interfaces/CalculoInterface.ts';
 
 class User {
     private id: ObjectId; 
@@ -8,7 +7,7 @@ class User {
     private email: string;
     private senha: string;
     private status: boolean;
-    private calculos: CalculoInterface[];
+    private avatar: string;
 
     constructor( 
         usuario: string,
@@ -16,7 +15,7 @@ class User {
         email: string,
         senha: string,
         status: boolean,
-        calculos: CalculoInterface[]
+        avatar: string
     ) {
         this.id = new ObjectId();
         this.usuario = usuario;
@@ -24,7 +23,7 @@ class User {
         this.email = email;
         this.senha = senha;
         this.status = status;
-        this.calculos = calculos;
+        this.avatar = avatar;
     }
 
     
@@ -76,12 +75,12 @@ class User {
         this.status = status;
     }
 
-    getCalculos(): CalculoInterface[] {
-        return this.calculos;
+    getAvatar(): string {
+        return this.avatar;
     }
 
-    setCalculos(calculos: CalculoInterface[]) {
-        this.calculos = calculos;
+    setAvatar(avatar: string) {
+        avatar = avatar;
     }
 }
 

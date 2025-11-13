@@ -6,7 +6,7 @@ export interface UserInterface{
     usuario: string
     nome: string
     email: string
-    senha: string
+    senha?: string
     status: boolean
-    calculos: CalculoInterface[]
+    avatar: string;
 }

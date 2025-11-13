@@ -25,8 +25,11 @@ class UserService {
 
   public async searchUserById(id: string): Promise<UserInterface | null> {
     const user = await this.userRepository.searchById(new ObjectId(id));
+   
+    if (!user) return null;
 
-    return user || null;
+    const { senha, ...userWithoutPass } = user;
+    return userWithoutPass;
   }
 
   public async createUser(
@@ -35,7 +38,7 @@ class UserService {
     email: string,
     senha: string,
     status: boolean,
-    calculos: CalculoInterface[],
+    avatar: string,
   ): Promise<InsertOneResult<UserInterface> | null> {
 
     const userExists = await this.userRepository.verifyUser(usuario);
@@ -54,7 +57,7 @@ class UserService {
       email,
       criptSenha,
       status,
-      calculos
+      avatar
     );
 
     const userData: UserInterface = {
@@ -63,7 +66,7 @@ class UserService {
       email: user.getEmail(),
       senha: user.getSenha(),
       status: user.getStatus(),
-      calculos: user.getCalculos(),
+      avatar: user.getAvatar(),
     };
 
     const createdUser = await this.userRepository.createUser(userData);
@@ -72,14 +75,14 @@ class UserService {
   }
 
   public async updateUser(user: UserInterface, id: string): Promise<UpdateResult<Document> | null> {
-
+    console.log(user)
     const typedUser: UserInterface = {
       usuario: user.usuario,
       nome: user.nome,
       email: user.email,
-      senha: user.senha,
+      senha: await bcrypt.hash(user.senha!, 10),
       status: user.status,
-      calculos: user.calculos,
+      avatar: user.avatar,
     };
 
     const updatedUser = await this.userRepository.updateUser(
@@ -109,7 +112,7 @@ class UserService {
       return null;
     }
 
-    const correctPass = await bcrypt.compare(senha, user.senha);
+    const correctPass = await bcrypt.compare(senha, user.senha!);
 
     if (!correctPass) {
       return null;
