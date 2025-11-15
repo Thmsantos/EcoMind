@@ -38,7 +38,6 @@ class UserRepository {
     const collection = db.collection("users");
 
     const updatedUser = await collection.updateOne({ _id: id }, { $set: user });
-
     return updatedUser || null
   }
 
@@ -50,10 +49,10 @@ class UserRepository {
     return deletedUser;
   }
 
-  public async verifyUser(usuario: string): Promise<boolean> {
+  public async verifyUser(user: string): Promise<boolean> {
     const db = client.db("EcoMind");
     const collection = db.collection("users");
-    const userExists = await collection.findOne({ usuario: usuario })
+    const userExists = await collection.findOne({ user: user })
 
     return !!userExists;
   }

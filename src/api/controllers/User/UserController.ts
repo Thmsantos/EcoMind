@@ -4,8 +4,10 @@ import UserService from "../../../modules/User/service/UserService";
 export default class UserController {
     private userService: UserService;
 
-    constructor() {
-        this.userService = new UserService();
+    constructor(
+        userService: UserService
+    ) {
+        this.userService = userService;
     }
 
     public async searchUser(req: Request, res: Response): Promise<void> {
@@ -21,11 +23,11 @@ export default class UserController {
 
     public async createUser(req: Request, res: Response): Promise<void> {
         try {
-            const { usuario, nome, email, senha } = req.body;
+            const { user, name, email, senha } = req.body;
 
             const createdUser = await this.userService.createUser(
-                usuario,
-                nome,
+                user,
+                name,
                 email,
                 senha,
                 true,
@@ -55,7 +57,7 @@ export default class UserController {
             const updatedUser = await this.userService.updateUser(user, id)
             res.status(200).json({
                 message: "Usuário atualizado!",
-                usuario: updatedUser
+                user: updatedUser
             })
         } catch (error) {
             console.error("Erro ao atualizar usuário:", error);
@@ -79,9 +81,9 @@ export default class UserController {
 
     public async login(req: Request, res: Response): Promise<void> {
         try{    
-            const { usuario, senha } = req.body;
+            const { user, senha } = req.body;
 
-            const loggedUser = await this.userService.login(usuario, senha );
+            const loggedUser = await this.userService.login(user, senha );
 
             if (loggedUser) {
                 res.status(200).json({

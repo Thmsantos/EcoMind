@@ -1,20 +1,16 @@
-import express from 'express';
-type Request = express.Request;
-type Response = express.Response; import UserRepository from "../repository/UserRepository.ts";
+import UserRepository from "../repository/UserRepository.ts";
 import type { UserInterface } from "../interfaces/userInterface.ts";
 import User from "../User.ts";
 import bcrypt from "bcrypt";
 import { DeleteResult, InsertOneResult, ObjectId, UpdateResult } from "mongodb";
-import EmailService from "../../Email/service/emailService.ts";
-import { CalculoInterface } from '../../Calculo/interfaces/CalculoInterface.ts';
 
 class UserService {
   private userRepository: UserRepository;
-  private emailService: EmailService;
 
-  constructor() {
-    this.userRepository = new UserRepository();
-    this.emailService = new EmailService();
+  constructor(
+    userRepository: UserRepository
+  ) {
+    this.userRepository = userRepository;
   }
 
   public async searchUser(pip: any): Promise<UserInterface | null> {
@@ -25,7 +21,7 @@ class UserService {
 
   public async searchUserById(id: string): Promise<UserInterface | null> {
     const user = await this.userRepository.searchById(new ObjectId(id));
-   
+
     if (!user) return null;
 
     const { senha, ...userWithoutPass } = user;
@@ -33,16 +29,15 @@ class UserService {
   }
 
   public async createUser(
-    usuario: string,
-    nome: string,
+    user: string,
+    name: string,
     email: string,
     senha: string,
     status: boolean,
     avatar: string,
   ): Promise<InsertOneResult<UserInterface> | null> {
 
-    const userExists = await this.userRepository.verifyUser(usuario);
-    const codigo = (Math.random() * 90000 + 10000) | 0;
+    const userExists = await this.userRepository.verifyUser(user);
 
     if (userExists) {
 
@@ -51,9 +46,9 @@ class UserService {
 
     const criptSenha = await bcrypt.hash(senha, 10);
 
-    const user = new User(
-      usuario,
-      nome,
+    const instancedUser = new User(
+      user,
+      name,
       email,
       criptSenha,
       status,
@@ -61,24 +56,22 @@ class UserService {
     );
 
     const userData: UserInterface = {
-      usuario: user.getUsuario(),
-      nome: user.getNome(),
-      email: user.getEmail(),
-      senha: user.getSenha(),
-      status: user.getStatus(),
-      avatar: user.getAvatar(),
+      user: instancedUser.getUser(),
+      name: instancedUser.getName(),
+      email: instancedUser.getEmail(),
+      senha: instancedUser.getSenha(),
+      status: instancedUser.getStatus(),
+      avatar: instancedUser.getAvatar(),
     };
 
     const createdUser = await this.userRepository.createUser(userData);
-    await this.emailService.esqueciSenha(email, String(codigo), usuario);
     return createdUser;
   }
 
   public async updateUser(user: UserInterface, id: string): Promise<UpdateResult<Document> | null> {
-    console.log(user)
     const typedUser: UserInterface = {
-      usuario: user.usuario,
-      nome: user.nome,
+      user: user.user,
+      name: user.name,
       email: user.email,
       senha: await bcrypt.hash(user.senha!, 10),
       status: user.status,
@@ -99,28 +92,18 @@ class UserService {
     return deletedUser;
   }
 
-  public async login(usuario: string, senha: string): Promise<string | null> {
-    const pip = [
-      {
-        $match: { usuario: usuario }
-      }
-    ];
+  public async login(user: string, senha: string): Promise<string | null> {
+    const pip = [{ $match: { user: user } }];
+    const searchedUser = await this.searchUser(pip);
 
-    const user = await this.searchUser(pip);
+    if (!searchedUser) return null
 
-    if (!user) {
-      return null;
-    }
+    const correctPass = await bcrypt.compare(senha, searchedUser.senha!);
 
-    const correctPass = await bcrypt.compare(senha, user.senha!);
+    if (!correctPass) return null;
 
-    if (!correctPass) {
-      return null;
-    }
-
-    return String(user._id);
+    return String(searchedUser._id);
   }
-
 }
 
 export default UserService;
