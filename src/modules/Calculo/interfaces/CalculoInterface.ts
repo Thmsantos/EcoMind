@@ -3,10 +3,10 @@ import { ObjectId } from 'mongodb';
 export interface CalculoInterface {
     id?: ObjectId;
     idUser: ObjectId; 
-    mes: string;
-    ano: string;
-    consumoEnergia: string;
-    consumoGas: string;
-    consumoTransporte:  string;
-    consumoCarbono: string;
+    month: string;
+    year: string;
+    energyEmissiom: string;
+    gasEmission: string;
+    vehicleEmission:  string;
+    carbonEmission: string;
 }

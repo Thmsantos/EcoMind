@@ -11,50 +11,52 @@ class CalculoService {
   private userService: UserService;
   private estatisticasService: EstatisticasService;
 
-  constructor() {
+  constructor(
+    userService: UserService,
+    rankingService: RankingService
+  ) {
     this.calculoRepository = new CalculoRepository();
-    this.rankingService = new RankingService();
-    this.userService = new UserService();
+    this.rankingService = rankingService;
+    this.userService = userService;
     this.estatisticasService = new EstatisticasService();
   }
 
-  public async createCalculo(calculo: CalculoInterface, idUser: string): Promise<InsertOneResult<CalculoInterface> | null> {
-    const calculoData: CalculoInterface = {
+  public async createCalculo(calc: CalculoInterface, idUser: string): Promise<InsertOneResult<CalculoInterface> | null> {
+    const calcData: CalculoInterface = {
       idUser: new ObjectId(idUser),
-      mes: calculo.mes,
-      ano: calculo.ano,
-      consumoGas: calculo.consumoGas,
-      consumoEnergia: calculo.consumoEnergia,
-      consumoTransporte: calculo.consumoEnergia,
-      consumoCarbono: calculo.consumoCarbono,
+      month: calc.month,
+      year: calc.year,
+      gasEmission: calc.gasEmission,
+      energyEmissiom: calc.energyEmissiom,
+      vehicleEmission: calc.vehicleEmission,
+      carbonEmission: calc.carbonEmission,
     };
-
 
     await this.estatisticasService.createStats({
       idUser: idUser,
       dataUser: {
-        mes: calculo.mes,
-        ano: calculo.ano,
-        emissao: calculo.consumoCarbono
+        month: calc.month,
+        year: calc.year,
+        carbonEmission: calc.carbonEmission
       }
     });
 
-    const createdCalculo = await this.calculoRepository.createCalculo(calculoData);
+    const createdCalculo = await this.calculoRepository.createCalculo(calcData);
 
-    await this.createOrUpdateRanking(calculo.consumoCarbono, new ObjectId(idUser));
+    await this.createOrUpdateRanking(calc.carbonEmission, new ObjectId(idUser));
 
     return createdCalculo;
   }
 
-  private async createOrUpdateRanking(emissao: string, idUser: ObjectId) {
-    const user = await this.userService.searchUser([
+  private async createOrUpdateRanking(emission: string, idUser: ObjectId) {
+    const searchedUser = await this.userService.searchUser([
       { $match: { idUser: new ObjectId(idUser) } }
     ]);
 
-    if (!user) return;
+    if (!searchedUser) return;
 
     const currentPoints = await this.fetchPoints(idUser);
-    const emissionValue = Number(emissao);
+    const emissionValue = Number(emission);
     const earnedPoints = emissionValue <= 166 ? 7 : emissionValue <= 356 ? 2 : 0;
     if (earnedPoints === 0) return;
 
@@ -62,18 +64,13 @@ class CalculoService {
 
     await (
       currentPoints != null
-        ? this.rankingService.atualizarRanking(user.usuario, totalPoints)
-        : this.rankingService.criarRanking(user.usuario, totalPoints)
+        ? this.rankingService.updateRanking(searchedUser.user, totalPoints)
+        : this.rankingService.createRanking(searchedUser.user, totalPoints)
     );
   }
 
-
   private async fetchPoints(idUser: ObjectId): Promise<Number | null> {
-    const pipeline = [{
-      $match: {
-        idUser: new ObjectId(idUser),
-      }
-    }]
+    const pipeline = [{ $match: { idUser: new ObjectId(idUser) } }]
 
     const result = await this.rankingService.getRanking(pipeline);
     return result ? result.pontos : null;
