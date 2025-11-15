@@ -1,10 +1,6 @@
-import { Router } from "express";
-import RankingService from "../../../modules/Ranking/service/RankingService.ts";
+import { rankingService } from "../../../modules/Ranking/service";
+import RankingController from "./RankingController";
 
-const rankingRoutes = Router();
-const rankingService = new RankingService();
-
-rankingRoutes.post("/create", (req, res) => rankingService.criarRanking(req, res));
-rankingRoutes.put("/update", (req, res) => rankingService.atualizarRanking(req, res));
-
-export default rankingRoutes;
+export const rankingController = new RankingController(
+    rankingService
+)

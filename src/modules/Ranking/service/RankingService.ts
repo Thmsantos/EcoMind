@@ -6,18 +6,20 @@ import { InsertOneResult, UpdateResult } from "mongodb";
 class RankingService {
   private rankingRepository: RankingRepository;
 
-  constructor() {
-    this.rankingRepository = new RankingRepository();
+  constructor(
+    rankingRepository: RankingRepository
+  ) {
+    this.rankingRepository = rankingRepository;
   }
 
-  public async criarRanking(user: string, pontos: number): Promise<InsertOneResult<RankingInterface> | null> {
+  public async createRanking(user: string, pontos: number): Promise<InsertOneResult<RankingInterface> | null> {
     const ranking = new Ranking(
       pontos,
       user
     );
 
     const novoRanking: RankingInterface = {
-      usuario: ranking.getUsuario(),
+      user: ranking.getUser(),
       pontos: pontos
     };
 
@@ -26,8 +28,8 @@ class RankingService {
     return result;
   }
 
-  public async atualizarRanking(usuario: string, pontos: number): Promise<UpdateResult<RankingInterface> | null> {
-    const resultado = await this.rankingRepository.update(usuario, pontos);
+  public async updateRanking(user: string, pontos: number): Promise<UpdateResult<RankingInterface> | null> {
+    const resultado = await this.rankingRepository.update(user, pontos);
 
     return resultado;
   }

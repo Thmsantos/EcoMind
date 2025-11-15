@@ -19,12 +19,12 @@ class RankingRepository {
         }
     }
 
-    public async update(usuario: string, pontos: number): Promise<UpdateResult<RankingInterface> | null> {
+    public async update(user: string, pontos: number): Promise<UpdateResult<RankingInterface> | null> {
         const db = client.db("EcoMind");
         const collection = db.collection<RankingInterface>("ranking");
 
         const resultado = await collection.updateOne(
-            { usuario },
+            { user },
             { $set: { pontos } }
         );
 
@@ -38,7 +38,6 @@ class RankingRepository {
         const data = await collection.aggregate<RankingInterface>(pip).next();
         return data;
     }
-
 }
 
 export default RankingRepository;
