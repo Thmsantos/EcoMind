@@ -2,24 +2,24 @@ import { ObjectId } from 'mongodb';
 
 class User {
     private id: ObjectId; 
-    private usuario: string;
-    private nome: string;
+    private user: string;
+    private name: string;
     private email: string;
     private senha: string;
     private status: boolean;
     private avatar: string;
 
     constructor( 
-        usuario: string,
-        nome: string,
+        user: string,
+        name: string,
         email: string,
         senha: string,
         status: boolean,
         avatar: string
     ) {
         this.id = new ObjectId();
-        this.usuario = usuario;
-        this.nome = nome;
+        this.user = user;
+        this.name = name;
         this.email = email;
         this.senha = senha;
         this.status = status;
@@ -35,20 +35,20 @@ class User {
         this.id = id;
     }
 
-    getUsuario(): string {
-        return this.usuario;
+    getUser(): string {
+        return this.user;
     }
 
-    setUsuario(usuario: string) {
-        this.usuario = usuario;
+    setUser(user: string) {
+        this.user = user;
     }
 
-    getNome(): string {
-        return this.nome;
+    getName(): string {
+        return this.name;
     }
 
-    setNome(nome: string) {
-        this.nome = nome;
+    setName(name: string) {
+        this.name = name;
     }
 
     getEmail(): string {

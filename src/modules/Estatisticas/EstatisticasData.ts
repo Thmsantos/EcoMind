@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 
 export interface DataUser{
-    mes: string,
-    ano: string,
-    emissao: string
+    month: string,
+    year: string,
+    carbonEmission: string
 }
 
 export interface EstatisticasData{

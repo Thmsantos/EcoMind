@@ -2,6 +2,6 @@ import { ObjectId } from "mongodb";
 
 export interface RankingInterface {
     id?: ObjectId;
-    usuario: string;
+    user: string;
     pontos: number;
 }

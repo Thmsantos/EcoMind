@@ -2,30 +2,30 @@ import { ObjectId } from 'mongodb';
 class Calculo {
     private id: ObjectId;
     private idUser: ObjectId; 
-    private mes: string;
-    private ano: string;
-    private consumoEnergia: string;
-    private consumoGas: string;
-    private consumoTransporte: string;
-    private consumoCarbono: string;
+    private month: string;
+    private year: string;
+    private energyEmission: string;
+    private gasEmission: string;
+    private vehicleEmission: string;
+    private carbonEmission: string;
 
     constructor( 
         idUser: ObjectId,
-        mes: string,
-        consumoEnergia: string,
-        consumoGas: string,
-        ano: string,
-        consumoTransporte: string,
-        consumoCarbono: string,
+        month: string,
+        energyEmission: string,
+        gasEmission: string,
+        year: string,
+        vehicleEmission: string,
+        carbonEmission: string,
     ) {
         this.id = new ObjectId();
         this.idUser = idUser;
-        this.mes = mes;
-        this.ano = ano;
-        this.consumoEnergia = consumoEnergia;
-        this.consumoGas = consumoGas;
-        this.consumoTransporte = consumoTransporte;
-        this.consumoCarbono = consumoCarbono;
+        this.month = month;
+        this.year = year;
+        this.energyEmission = energyEmission;
+        this.gasEmission = gasEmission;
+        this.vehicleEmission = vehicleEmission;
+        this.carbonEmission = carbonEmission;
     }
 
     
@@ -45,52 +45,52 @@ class Calculo {
         this.idUser = idUser;
     }
 
-    getMes(): string {
-        return this.mes;
+    getMonth(): string {
+        return this.month;
     }
 
-    setMes(mes: string) {
-        this.mes = mes;
+    setMonth(month: string) {
+        this.month = month;
     }
 
-    getAno(): string {
-        return this.ano;
+    getYear(): string {
+        return this.year;
     }
 
-    setAno(ano: string){
-        this.ano = ano
+    setYear(year: string){
+        this.year = year
     }
 
-    getconsumoEnergia(): string {
-        return this.consumoEnergia;
+    getEnergyEmission(): string {
+        return this.energyEmission;
     }
 
-    setconsumoEnergia(consumoEnergia: string) {
-        this.consumoEnergia = consumoEnergia;
+    setEnergyEmission(energyEmission: string) {
+        this.energyEmission = energyEmission;
     }
 
-    getconsumoGas(): string {
-        return this.consumoGas;
+    getGasEmission(): string {
+        return this.gasEmission;
     }
 
-    setconsumoGas(consumoGas: string) {
-        this.consumoGas = consumoGas;
+    setGasEmission(gasEmission: string) {
+        this.gasEmission = gasEmission;
     }
 
-    getconsumoTransporte(): string {
-        return this.consumoTransporte;
+    getVehicleEmission(): string {
+        return this.vehicleEmission;
     }
 
-    setconsumoTransporte(consumoTransporte: string) {
-        this.consumoTransporte = consumoTransporte;
+    setVehicleEmission(vehicleEmission: string) {
+        this.vehicleEmission = vehicleEmission;
     }
 
-    getconsumoCarbono(): string {
-        return this.consumoCarbono;
+    getCarbonEmission(): string {
+        return this.carbonEmission;
     }
 
-    setconsumoCarbono(consumoCarbono: string) {
-        this.consumoCarbono = consumoCarbono;
+    setCarbonEmission(carbonEmission: string) {
+        this.carbonEmission = carbonEmission;
     }
 }
 

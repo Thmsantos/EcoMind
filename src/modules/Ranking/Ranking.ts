@@ -3,15 +3,15 @@ import { ObjectId } from "mongodb"
 class Ranking {
    private id: ObjectId
    private pontos: number
-   private usuario: string
+   private user: string
 
     constructor(
         pontos: number,
-        usuario: string
+        user: string
     ) {
         this.id = new ObjectId();
         this.pontos = pontos;
-        this.usuario = usuario
+        this.user = user
     }
 
     getId(): ObjectId {
@@ -30,12 +30,12 @@ class Ranking {
         this.pontos = pontos
     }
 
-    getUsuario(): string {
-        return this.usuario;
+    getUser(): string {
+        return this.user;
     }
 
-    setUsuario(usuario: string){
-        this.usuario = usuario
+    setUser(user: string){
+        this.user = user
     }
 }
 export default Ranking;
