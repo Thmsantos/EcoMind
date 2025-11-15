@@ -1,11 +1,10 @@
 import express from "express";
 import userRoutes from "./User/index.ts";
-import rankingRoutes from "../controllers/Ranking/index.ts";
 import calculoRoutes from "./Calculo/index.ts";
-import esqueciSenhaRoutes from "../controllers/EsqueciSenha/index.ts";
 import { errorHandler } from "../../config/midlleware/errorHandler.ts"; 
 import cors from "cors"
 import statsRoutes from "./Stats/index.ts";
+import rankingRoutes from "./Ranking/index.ts";
 
 const app = express();
 app.use(cors());
@@ -15,7 +14,6 @@ app.use("/api/user", userRoutes);
 app.use("/api/stats", statsRoutes)
 app.use("/api/calculos", calculoRoutes);
 app.use("/api/ranking", rankingRoutes);
-app.use("/api/esqueciSenha", esqueciSenhaRoutes);
 
 app.use(errorHandler);
 

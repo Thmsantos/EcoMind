@@ -1,9 +1,7 @@
-// src/routes/userRoutes.ts
 import { Router } from "express";
-import UserController from "../../controllers/User/UserController";
+import { userController } from "../../controllers/User";
 
 const userRoutes = Router();
-const userController = new UserController();
 
 userRoutes.get("/:id", (req, res) => userController.searchUser(req, res));
 userRoutes.post("/create", (req, res) => userController.createUser(req, res));
